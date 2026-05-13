@@ -4,6 +4,8 @@ __pycache__/
 *.xlsx
 *.csv
 *.log
+*.bak
 .DS_Store
 product_id_cache.json
 raw_cache_*.json
+data-auto/

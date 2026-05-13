@@ -30,6 +30,12 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import requests
 import config
 
+
+class QuotaExhausted(Exception):
+    """3 次连续 429 视为日配额耗尽，立即抛出停止脚本。
+    关键意图：不让 _resolve_one 把这种失败缓存为 None — 否则恢复时该 PID 会被永久跳过。"""
+    pass
+
 # ── Confirmed endpoints (probed 2025-05-11) ───────────────────────────────────
 _USAGE_URL   = "https://api.data.ai/v1.3/intelligence/apps/{market}/usage-ranking"
 _DETAILS_URL = "https://api.data.ai/v1.3/apps/{market}/app/{pid}/details"
@@ -204,6 +210,12 @@ def _resolve_one(platform, pid, retries=3):
                 _name_cache[cache_key] = None
                 return None
             elif r.status_code == 429:
+                if attempt == retries - 1:
+                    # 最后一次重试还是 429 = 日配额几乎肯定耗尽，立即停止。
+                    # 不能缓存 None：那样恢复时该 PID 会被永久跳过，对应 APP 数据丢失。
+                    print(f"\n  [429] details {platform}:{pid} attempt {attempt+1}/{retries} "
+                          f"FAILED — 日配额疑似耗尽，停止以保护缓存。", flush=True)
+                    raise QuotaExhausted(f"{platform}:{pid} hit 429 after {retries} attempts")
                 ra = r.headers.get("Retry-After")
                 wait = int(ra) if ra and ra.isdigit() else 60 * (2 ** attempt)
                 print(f"\n  [429] details {platform}:{pid} (attempt {attempt+1}/{retries}). "
@@ -250,13 +262,19 @@ def _resolve_all_names(raw, delay_between_calls=2.0):
     print(f"  Resolving {total} uncached IDs sequentially "
           f"(~{est_min} min at {delay_between_calls}s/call)...", flush=True)
 
-    for i, (platform, pid) in enumerate(needed):
-        _resolve_one(platform, pid)
-        if delay_between_calls > 0:
-            time.sleep(delay_between_calls)
-        if (i + 1) % 50 == 0:
-            print(f"    {i+1}/{total} resolved...", flush=True)
-            _save_cache()
+    try:
+        for i, (platform, pid) in enumerate(needed):
+            _resolve_one(platform, pid)
+            if delay_between_calls > 0:
+                time.sleep(delay_between_calls)
+            if (i + 1) % 50 == 0:
+                print(f"    {i+1}/{total} resolved...", flush=True)
+                _save_cache()
+    except QuotaExhausted:
+        # 立即落盘当前进度，重新抛出让 run.py 友好退出。
+        _save_cache()
+        print(f"  当前缓存: {len(_name_cache)} 条目，已落盘。", flush=True)
+        raise
 
     _save_cache()
     resolved = sum(1 for v in _name_cache.values() if v)

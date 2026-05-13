@@ -74,7 +74,14 @@ def main():
         print(f"  Kwai   override: {args.kwai:.3f} 十亿分钟")
 
     print("\n[1/3] Fetching datasets...")
-    datasets = fetch.fetch_all(args.month)
+    try:
+        datasets = fetch.fetch_all(args.month)
+    except fetch.QuotaExhausted as e:
+        print(f"\n=== 日配额耗尽，今日运行终止 ===")
+        print(f"  原因: {e}")
+        print(f"  操作: 明日 UTC 00:00（北京 08:00）配额重置后，重跑同样命令即可从缓存续传。")
+        print(f"  Excel 未生成（数据不完整）。")
+        sys.exit(2)
 
     print("\n[2/3] Running pipeline...")
     result = pipeline.run(datasets, tiktok_bn=args.tiktok, kwai_bn=args.kwai)
