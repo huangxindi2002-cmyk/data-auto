@@ -184,7 +184,8 @@ def _fetch_all_raw(month, inter_call_delay=5):
 # ── Phase 2: name resolution ─────────────────────────────────────────────────
 
 def _resolve_one(platform, pid, retries=3):
-    """Resolve one product_id → unified_product_name. Writes to _name_cache."""
+    """Resolve one product_id → unified_product_name. Writes to _name_cache.
+    429 时优先用 Retry-After 头，否则指数退避；并在 stderr 打印以便诊断限速。"""
     cache_key = f"{platform}:{pid}"
     if cache_key in _name_cache:
         return _name_cache[cache_key]
@@ -203,13 +204,19 @@ def _resolve_one(platform, pid, retries=3):
                 _name_cache[cache_key] = None
                 return None
             elif r.status_code == 429:
-                time.sleep(120 * (attempt + 1))
+                ra = r.headers.get("Retry-After")
+                wait = int(ra) if ra and ra.isdigit() else 60 * (2 ** attempt)
+                print(f"\n  [429] details {platform}:{pid} (attempt {attempt+1}/{retries}). "
+                      f"Waiting {wait}s...", flush=True)
+                time.sleep(wait)
                 continue
             else:
                 _name_cache[cache_key] = None
                 return None
-        except requests.RequestException:
+        except requests.RequestException as e:
             if attempt < retries - 1:
+                print(f"\n  [net] {platform}:{pid} {type(e).__name__}; retry in 5s...",
+                      flush=True)
                 time.sleep(5)
                 continue
             _name_cache[cache_key] = None
@@ -218,7 +225,7 @@ def _resolve_one(platform, pid, retries=3):
     return None
 
 
-def _resolve_all_names(raw, delay_between_calls=1.0):
+def _resolve_all_names(raw, delay_between_calls=2.0):
     """
     Phase 2: resolve all unique product_ids across all datasets sequentially.
     Sequential (not parallel) to stay well within daily API quota.
