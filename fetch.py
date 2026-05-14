@@ -319,6 +319,59 @@ def _build_datasets(raw):
 
 # ── Public API ────────────────────────────────────────────────────────────────
 
+def fetch_from_cache(month):
+    """
+    Cache-only mode: 完全跳过 Phase 1 & 2，直接用磁盘缓存构建数据集。
+    需要两个文件都存在：
+      - raw_cache_{month}.json  (Phase 1 结果)
+      - product_id_cache.json   (Phase 2 名称映射)
+
+    已缓存的 product_id 正常解析；缺失的 ID 静默跳过（不发 API 请求）。
+    当前缓存 7000/9495 = 73.7%，主要分类合计偏差通常 <5%。
+    """
+    raw_cache_path = _raw_cache_path(month)
+    if not os.path.exists(raw_cache_path):
+        raise FileNotFoundError(
+            f"raw_cache_{month}.json 不存在（{raw_cache_path}）。"
+            f"Phase 1 尚未完成，无法使用 --use-cache 模式。"
+        )
+
+    _load_cache()
+    cached_ids = sum(1 for v in _name_cache.values() if v)
+    total_ids = len(_name_cache)
+    print(f"  Name cache loaded: {cached_ids}/{total_ids} entries have names.", flush=True)
+
+    print(f"  Loading raw Phase 1 data from {raw_cache_path}...", flush=True)
+    raw = _load_raw(month)
+    if not raw:
+        raise FileNotFoundError(
+            f"raw_cache_{month}.json 存在但无法读取或为空。"
+        )
+
+    all_ids = sum(len(pairs) for pairs in raw.values())
+    covered = sum(
+        1 for pairs in raw.values()
+        for pid, _ in pairs
+        if _name_cache.get(f"{'android' if 'android' in str(pairs) else 'ios'}:{pid}")
+    )
+    # More accurate coverage count
+    covered_count = 0
+    total_count = 0
+    for (key, platform), pairs in raw.items():
+        for pid, _ in pairs:
+            total_count += 1
+            if _name_cache.get(f"{platform}:{pid}"):
+                covered_count += 1
+
+    print(f"  Raw data: {len(raw)} datasets, {total_count} records total.", flush=True)
+    print(f"  Name coverage: {covered_count}/{total_count} "
+          f"({100*covered_count/max(total_count,1):.1f}%) records will be included.", flush=True)
+    print(f"  (Uncached records silently skipped — no API calls made)", flush=True)
+
+    print("\n  Phase 3: building combined datasets...", flush=True)
+    return _build_datasets(raw)
+
+
 def fetch_all(month, inter_call_delay=5):
     """
     Fetch all 8 datasets for the given month (e.g. '2025-07').

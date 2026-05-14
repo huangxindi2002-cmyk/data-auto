@@ -3,11 +3,16 @@ Entry point.
 
 Usage:
   python run.py --month 2025-07 --tiktok 175.887 --kwai 68.967
+  python run.py --month 2025-07 --tiktok 175.887 --kwai 68.967 --use-cache
 
-  --month   YYYY-MM (required)
-  --tiktok  TikTok total time in billion minutes  (from 竞对监控; optional)
-  --kwai    Kwai total time in billion minutes    (from 内部看板; optional)
-  --out     output .xlsx path (default: 巴西数据底稿_YYYY-MM.xlsx)
+  --month      YYYY-MM (required)
+  --tiktok     TikTok total time in billion minutes  (from 竞对监控; optional)
+  --kwai       Kwai total time in billion minutes    (from 内部看板; optional)
+  --out        output .xlsx path (default: 巴西数据底稿_YYYY-MM.xlsx)
+  --use-cache  Skip Phase 1 & 2; build datasets directly from cached product_id_cache.json
+               and raw_cache_{month}.json. Useful when API quota is exhausted.
+               Apps not in cache are silently skipped (expect ~26% data loss for cold cache;
+               warm cache at 73.7% means <5% error on major categories).
 """
 
 import argparse
@@ -63,6 +68,8 @@ def main():
                         help="Kwai 十亿分钟 (手动覆盖)")
     parser.add_argument("--out",    default=None,
                         help="输出文件路径 (default: 巴西数据底稿_YYYY-MM.xlsx)")
+    parser.add_argument("--use-cache", action="store_true",
+                        help="跳过 Phase 1+2，直接用本地缓存出 Excel（API 配额耗尽时用）")
     args = parser.parse_args()
 
     out_path = args.out or f"巴西数据底稿_{args.month}.xlsx"
@@ -73,15 +80,25 @@ def main():
     if args.kwai:
         print(f"  Kwai   override: {args.kwai:.3f} 十亿分钟")
 
-    print("\n[1/3] Fetching datasets...")
-    try:
-        datasets = fetch.fetch_all(args.month)
-    except fetch.QuotaExhausted as e:
-        print(f"\n=== 日配额耗尽，今日运行终止 ===")
-        print(f"  原因: {e}")
-        print(f"  操作: 明日 UTC 00:00（北京 08:00）配额重置后，重跑同样命令即可从缓存续传。")
-        print(f"  Excel 未生成（数据不完整）。")
-        sys.exit(2)
+    if args.use_cache:
+        print("\n[CACHE MODE] 跳过 Phase 1+2，直接从本地缓存构建数据集...")
+        try:
+            datasets = fetch.fetch_from_cache(args.month)
+        except FileNotFoundError as e:
+            print(f"\n=== 错误：缓存文件不存在 ===")
+            print(f"  {e}")
+            print(f"  请先运行一次完整流程（或至少完成 Phase 1）以生成 raw_cache_{args.month}.json")
+            sys.exit(1)
+    else:
+        print("\n[1/3] Fetching datasets...")
+        try:
+            datasets = fetch.fetch_all(args.month)
+        except fetch.QuotaExhausted as e:
+            print(f"\n=== 日配额耗尽，今日运行终止 ===")
+            print(f"  原因: {e}")
+            print(f"  操作: 配额恢复后重跑，或加 --use-cache 用现有缓存出 Excel。")
+            print(f"  Excel 未生成（数据不完整）。")
+            sys.exit(2)
 
     print("\n[2/3] Running pipeline...")
     result = pipeline.run(datasets, tiktok_bn=args.tiktok, kwai_bn=args.kwai)
