@@ -15,7 +15,7 @@ cd "$(dirname "$0")"
 PYTHON="/Library/Frameworks/Python.framework/Versions/3.14/bin/python3"
 LAST_INPUTS="$(pwd)/.last_inputs.json"
 ENV_FILE="$(pwd)/.env"
-RUN_LOG="$(pwd)/run_$(date +%Y%m%d_%H%M).log"
+# RUN_LOG 在 MONTH 获取后设置，统一为 run_${MONTH}.log，与 watch_and_resume.sh / README 一致
 
 # 读取 API KEY
 if [ -f "$ENV_FILE" ]; then
@@ -74,6 +74,10 @@ echo "  月份:    $MONTH"
 echo "  TikTok:  $TIKTOK"
 echo "  Kwai:    $KWAI"
 echo ""
+
+# 日志统一命名（与 watch_and_resume.sh / README 一致）
+RUN_LOG="$(pwd)/run_${MONTH}.log"
+
 
 # 4. 探测 API
 echo "🔍 探测 data.ai API 状态..."

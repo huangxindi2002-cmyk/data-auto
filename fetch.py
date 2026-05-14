@@ -348,13 +348,6 @@ def fetch_from_cache(month):
             f"raw_cache_{month}.json 存在但无法读取或为空。"
         )
 
-    all_ids = sum(len(pairs) for pairs in raw.values())
-    covered = sum(
-        1 for pairs in raw.values()
-        for pid, _ in pairs
-        if _name_cache.get(f"{'android' if 'android' in str(pairs) else 'ios'}:{pid}")
-    )
-    # More accurate coverage count
     covered_count = 0
     total_count = 0
     for (key, platform), pairs in raw.items():
