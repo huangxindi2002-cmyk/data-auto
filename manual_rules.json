@@ -7,8 +7,8 @@
     },
     "Google": {
       "cat": "浏览器/搜索",
-      "tag": 1,
-      "ext_time": 15529088421
+      "tag": 0,
+      "ext_time": null
     },
     "Chrome Browser": {
       "cat": "浏览器/搜索",
@@ -377,13 +377,13 @@
     },
     "Seekee - Safe&Fast Browser": {
       "cat": "浏览器/搜索",
-      "tag": 1,
-      "ext_time": 1508460202
+      "tag": 0,
+      "ext_time": null
     },
     "Mi Browser": {
       "cat": "浏览器/搜索",
-      "tag": 1,
-      "ext_time": 513968029
+      "tag": 0,
+      "ext_time": null
     },
     "Youtube": {
       "cat": "长视频",
@@ -392,28 +392,28 @@
     },
     "Netflix": {
       "cat": "长视频",
-      "tag": 1,
-      "ext_time": 15761750498
+      "tag": 0,
+      "ext_time": null
     },
     "Globo Play": {
       "cat": "长视频",
-      "tag": 1,
-      "ext_time": 3667878849
+      "tag": 0,
+      "ext_time": null
     },
     "Amazon Prime Video": {
       "cat": "长视频",
-      "tag": 1,
-      "ext_time": 2334800042
+      "tag": 0,
+      "ext_time": null
     },
     "Max: Stream HBO, TV, & Movies": {
       "cat": "长视频",
-      "tag": 1,
-      "ext_time": 929547703
+      "tag": 0,
+      "ext_time": null
     },
     "disney+": {
       "cat": "长视频",
-      "tag": 1,
-      "ext_time": 1099946852
+      "tag": 0,
+      "ext_time": null
     },
     "Pure Tuber": {
       "cat": "长视频",
@@ -432,13 +432,13 @@
     },
     "ReelShort": {
       "cat": "长视频",
-      "tag": 1,
-      "ext_time": 681207706
+      "tag": 0,
+      "ext_time": null
     },
     "DramaBox - movies and drama": {
       "cat": "长视频",
-      "tag": 1,
-      "ext_time": 588892111
+      "tag": 0,
+      "ext_time": null
     },
     "twitch": {
       "cat": "直播",
@@ -452,8 +452,8 @@
     },
     "Pluto.tv": {
       "cat": "直播",
-      "tag": 1,
-      "ext_time": 353125330
+      "tag": 0,
+      "ext_time": null
     },
     "Hago": {
       "cat": "直播",
@@ -487,43 +487,43 @@
     },
     "Uber": {
       "cat": "生活服务",
-      "tag": 1,
-      "ext_time": 2533700127
+      "tag": 0,
+      "ext_time": null
     },
     "iFood Delivery de Comida": {
       "cat": "生活服务",
-      "tag": 1,
-      "ext_time": 2238241528
+      "tag": 0,
+      "ext_time": null
     },
     "99Taxis": {
       "cat": "生活服务",
-      "tag": 1,
-      "ext_time": 1667569928
+      "tag": 0,
+      "ext_time": null
     },
     "inDrive": {
       "cat": "生活服务",
-      "tag": 1,
-      "ext_time": 265380709
+      "tag": 0,
+      "ext_time": null
     },
     "Booking.com": {
       "cat": "生活服务",
-      "tag": 1,
-      "ext_time": 373162010
+      "tag": 0,
+      "ext_time": null
     },
     "Airbnb": {
       "cat": "生活服务",
-      "tag": 1,
-      "ext_time": 298177036
+      "tag": 0,
+      "ext_time": null
     },
     "Lalamove Driver": {
       "cat": "生活服务",
-      "tag": 1,
-      "ext_time": 362383601
+      "tag": 0,
+      "ext_time": null
     },
     "waze": {
       "cat": "社区",
-      "tag": 1,
-      "ext_time": 11890547649
+      "tag": 0,
+      "ext_time": null
     },
     "Pinterest": {
       "cat": "社区",

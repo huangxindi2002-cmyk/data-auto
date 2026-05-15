@@ -76,21 +76,37 @@ def run(csv_data, tiktok_min=None, kwai_min=None, manual_rules_path=None):
         tt_kwai['Kwai'] = float(kwai_min)
 
     # ---- Step 1: Overall sheet → app_unified[name] = Total Time ----
-    overall = {item['name']: float(item['time'])
-               for item in csv_data.get('Overall', [])
-               if item.get('name') and item.get('time')}
+    # 注意：相同 APP 名在不同平台 (Android/iOS) 可能大小写不一致 (waze vs Waze)，需归一化合并
+    # 归一化策略：用 lower() 作为 key，保留首次出现的原始大小写
+    overall = {}
+    overall_canonical = {}  # lower → canonical_name (preserved case)
+    for item in csv_data.get('Overall', []):
+        n = item.get('name')
+        t = item.get('time')
+        if not n or not t:
+            continue
+        key = n.lower()
+        if key not in overall_canonical:
+            overall_canonical[key] = n
+        canonical = overall_canonical[key]
+        overall[canonical] = overall.get(canonical, 0) + float(t)
 
     # ---- Step 2: 应用（有分类）—— 7 个分类 CSV 联结 ----
-    # 每行: (csv_cat, name, time_in_csv)
     cat_csvs = {k: v for k, v in csv_data.items() if k != 'Overall'}
-    cat_app_time = {}  # name → {csv_cat: time}
+    cat_app_time = {}  # canonical_name → {csv_cat: time}
     for csv_cat, items in cat_csvs.items():
         for item in items:
-            name = item.get('name')
+            n = item.get('name')
             t = float(item.get('time') or 0)
-            if not name or t <= 0:
+            if not n or t <= 0:
                 continue
-            cat_app_time.setdefault(name, {})[csv_cat] = t
+            key = n.lower()
+            # 用 overall 的 canonical name；若 overall 没有，则用本身
+            canonical = overall_canonical.get(key, n)
+            if key not in overall_canonical:
+                overall_canonical[key] = canonical
+            cat_app_time.setdefault(canonical, {})
+            cat_app_time[canonical][csv_cat] = cat_app_time[canonical].get(csv_cat, 0) + t
 
     # ---- Step 3: 计算 类型调整1 (cat1) + 类型调整2 (cat2) ----
     # cat1 = 该 APP 在所有分类 CSV 里 TotalTime 最大者所在的 CSV
@@ -107,6 +123,15 @@ def run(csv_data, tiktok_min=None, kwai_min=None, manual_rules_path=None):
         elif max_t / P > 0.5:
             name_to_cat2[name] = cat1  # 英文
         # else: cat2="" 不分类
+
+    # 关键修复：APP 仅在 Overall CSV 出现（不在任何分类 CSV），
+    # 但有人工规则时也要纳入分类（如 Pinterest 在 Overall 但不在 Social/Photo&Video 等任何分类）
+    for name in overall:
+        if name in name_to_cat2:
+            continue
+        rule = lookup_rule(name)
+        if rule and rule.get('cat'):
+            name_to_cat2[name] = rule['cat']
 
     # 加上人工规则中 tag=1 的 ext_time（不在 CSV 中也能加）
     for name, rule in rules_raw.items():
