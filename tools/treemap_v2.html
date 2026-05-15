@@ -1118,6 +1118,46 @@ document.getElementById('chart-area').addEventListener('drop', e => {
   e.preventDefault(); handleFile(e.dataTransfer.files[0])
 })
 
+// 自动加载 URL ?excel=... 参数指定的 Excel
+;(function autoLoadFromUrl() {
+  const params = new URLSearchParams(window.location.search)
+  const excelUrl = params.get('excel')
+  if (!excelUrl) return
+  const lbl = document.getElementById('upload-label')
+  lbl.textContent = '加载中…'
+  fetch(excelUrl)
+    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.arrayBuffer() })
+    .then(buf => {
+      try {
+        const { cats, sheetName } = parseExcel(new Uint8Array(buf))
+        if (!cats.length) throw new Error('未找到有效数据')
+        appState.categories = cats
+        appState.sheetName = sheetName
+        cats.forEach((cat, i) => {
+          if (!appState.colors[cat.name]) appState.colors[cat.name] = FALLBACK[i % FALLBACK.length]
+        })
+        buildColorList(); showChart(); renderChart()
+        const auto = parseSheetMonth(sheetName)
+        if (auto && !projectConfig.subtitleOverride) {
+          document.getElementById('tx-subtitle').placeholder = `自动：${auto}，月总时长XXX...`
+        }
+        if (auto) {
+          const m2 = auto.match(/(\d{4})年(\d{1,2})月/)
+          if (m2) {
+            const yr2 = m2[1].slice(2)
+            appState.bigTitle = `巴西${yr2}年${m2[2]}月各垂类软件使用时间`
+            document.getElementById('tx-bigtitle').value = appState.bigTitle
+          }
+        }
+      } catch(err) {
+        showError('自动加载失败：' + err.message)
+      } finally {
+        lbl.textContent = '上传 Excel'
+      }
+    })
+    .catch(err => { showError('自动加载失败：' + err.message); lbl.textContent = '上传 Excel' })
+})()
+
 // Export
 const getSvg = () => document.querySelector('#svg-wrapper svg')
 document.getElementById('btn-svg').addEventListener('click', () => {

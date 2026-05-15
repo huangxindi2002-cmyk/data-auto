@@ -1,0 +1,743 @@
+{
+  "rules": {
+    "safari": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Google": {
+      "cat": "浏览器/搜索",
+      "tag": 1,
+      "ext_time": 15529088421
+    },
+    "Chrome Browser": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Samsung Internet Browser": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Brave Browser: Fast AdBlocker": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Opera Browser": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Firefox Browser": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Microsoft Edge": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Adblock Browser: Fast & Secure": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "FAB Adblocker Browser: Adblock": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "UC Browser": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Kiwi Browser": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Vivaldi Browser": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Pure Web Browser-Ad Blocker": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Tor Browser": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Ecosia Browser": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Whats Web": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Web Browser & Fast Explorer": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Phoenix Browser": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Whats Web - Whatscan for Web": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Whats Web by 颖妮 王": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "POP Browser Lite": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Clone WA Web Scanner - Dual WA": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Dual WA: Web Messenger Duo": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "WhatWeb Cloner": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Whats Web by Firehawk": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "XBrowser": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Messenger for WhatsApp Web +": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Whats Web Scanner - Dual WA": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Whatscan Web - Clone App": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "WA Web": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Whats Web by CodeKraftApps": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Dolphin Browser": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Max Browser-Private & Security": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Incognito Browser - Go Private": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Whats Web: Whatscan Web 2021": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "InBrowser Beta": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Dual Chat - Web Scan": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Wh-Ap Web - 2nd Msgr": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "CryptoTab Browser": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "InBrowser": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Microsoft Edge Canary": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Microsoft Edge Beta": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Whatsclone - Whatscan web": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Avast Secure Browser": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Dual Messaging for Web App": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Clone WA - 2Space WA Web Scan": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Brave Browser (Beta)": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Opera Crypto Browser": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "UC Browser Turbo": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Armorfly Browser & Downloader - Private , Safe": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Internet Browser": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Web Explorer: Private Browser": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Whatscan for Web : Whatsweb QR": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Brave Browser (Nightly)": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Pawxy - Fast VPN & Web Browser": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Web Browser - Fast & Privacy": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Web Browser & Explorer": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Carbon: Super Fast Browser": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Web Scan - Dual Chat": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "KUTO Mini Browser-Tiny, Fast, ": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Whats Web Scanner - Clone App": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Web Browser - Secure Explorer": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Hola Browser-Private&Fast web": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Microsoft Edge Dev": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "AVG Secure Browser": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "WA Web - Dual Chat": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Pi Browser": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "WhatsWeb & Whatscan Web": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Super Browser: Fast & Private": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Whats Web Scan": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "OceanHero - Search the web and": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Private Browser": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "GB WA Latest For WhatsApp Web": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "ConferênciaWeb": {
+      "cat": "浏览器/搜索",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Seekee - Safe&Fast Browser": {
+      "cat": "浏览器/搜索",
+      "tag": 1,
+      "ext_time": 1508460202
+    },
+    "Mi Browser": {
+      "cat": "浏览器/搜索",
+      "tag": 1,
+      "ext_time": 513968029
+    },
+    "Youtube": {
+      "cat": "长视频",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Netflix": {
+      "cat": "长视频",
+      "tag": 1,
+      "ext_time": 15761750498
+    },
+    "Globo Play": {
+      "cat": "长视频",
+      "tag": 1,
+      "ext_time": 3667878849
+    },
+    "Amazon Prime Video": {
+      "cat": "长视频",
+      "tag": 1,
+      "ext_time": 2334800042
+    },
+    "Max: Stream HBO, TV, & Movies": {
+      "cat": "长视频",
+      "tag": 1,
+      "ext_time": 929547703
+    },
+    "disney+": {
+      "cat": "长视频",
+      "tag": 1,
+      "ext_time": 1099946852
+    },
+    "Pure Tuber": {
+      "cat": "长视频",
+      "tag": 0,
+      "ext_time": null
+    },
+    "MX Player": {
+      "cat": "长视频",
+      "tag": 0,
+      "ext_time": null
+    },
+    "VLC Media Player": {
+      "cat": "长视频",
+      "tag": 0,
+      "ext_time": null
+    },
+    "ReelShort": {
+      "cat": "长视频",
+      "tag": 1,
+      "ext_time": 681207706
+    },
+    "DramaBox - movies and drama": {
+      "cat": "长视频",
+      "tag": 1,
+      "ext_time": 588892111
+    },
+    "twitch": {
+      "cat": "直播",
+      "tag": 0,
+      "ext_time": null
+    },
+    "bigo live": {
+      "cat": "直播",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Pluto.tv": {
+      "cat": "直播",
+      "tag": 1,
+      "ext_time": 353125330
+    },
+    "Hago": {
+      "cat": "直播",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Instagram": {
+      "cat": "泛短视频",
+      "tag": 0,
+      "ext_time": null
+    },
+    "TikTok": {
+      "cat": "泛短视频",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Kwai": {
+      "cat": "泛短视频",
+      "tag": 0,
+      "ext_time": null
+    },
+    "CAPCUT": {
+      "cat": "泛短视频",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Likee": {
+      "cat": "泛短视频",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Uber": {
+      "cat": "生活服务",
+      "tag": 1,
+      "ext_time": 2533700127
+    },
+    "iFood Delivery de Comida": {
+      "cat": "生活服务",
+      "tag": 1,
+      "ext_time": 2238241528
+    },
+    "99Taxis": {
+      "cat": "生活服务",
+      "tag": 1,
+      "ext_time": 1667569928
+    },
+    "inDrive": {
+      "cat": "生活服务",
+      "tag": 1,
+      "ext_time": 265380709
+    },
+    "Booking.com": {
+      "cat": "生活服务",
+      "tag": 1,
+      "ext_time": 373162010
+    },
+    "Airbnb": {
+      "cat": "生活服务",
+      "tag": 1,
+      "ext_time": 298177036
+    },
+    "Lalamove Driver": {
+      "cat": "生活服务",
+      "tag": 1,
+      "ext_time": 362383601
+    },
+    "waze": {
+      "cat": "社区",
+      "tag": 1,
+      "ext_time": 11890547649
+    },
+    "Pinterest": {
+      "cat": "社区",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Reddit": {
+      "cat": "社区",
+      "tag": 0,
+      "ext_time": null
+    },
+    "quora": {
+      "cat": "社区",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Helo - Share Your Life": {
+      "cat": "社区",
+      "tag": 0,
+      "ext_time": null
+    },
+    "WhatsApp Messenger": {
+      "cat": "Social",
+      "tag": 0,
+      "ext_time": null
+    },
+    "WhatsApp Business": {
+      "cat": "Social",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Facebook": {
+      "cat": "Social",
+      "tag": 0,
+      "ext_time": null
+    },
+    "X": {
+      "cat": "Social",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Telegram": {
+      "cat": "Social",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Facebook Messenger": {
+      "cat": "Social",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Tinder": {
+      "cat": "Social",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Google News": {
+      "cat": "News & Magazines",
+      "tag": 0,
+      "ext_time": null
+    },
+    "G1": {
+      "cat": "News & Magazines",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Opera News": {
+      "cat": "News & Magazines",
+      "tag": 0,
+      "ext_time": null
+    },
+    "UOL | Notícias em Tempo Real": {
+      "cat": "News & Magazines",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Flipboard": {
+      "cat": "News & Magazines",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Zero Hora": {
+      "cat": "News & Magazines",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Wattpad": {
+      "cat": "Books & Reference",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Kindle": {
+      "cat": "Books & Reference",
+      "tag": 0,
+      "ext_time": null
+    },
+    "JW Library": {
+      "cat": "Books & Reference",
+      "tag": 0,
+      "ext_time": null
+    },
+    "GALATEA": {
+      "cat": "Books & Reference",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Bible": {
+      "cat": "Books & Reference",
+      "tag": 0,
+      "ext_time": null
+    },
+    "NovelToon": {
+      "cat": "Books & Reference",
+      "tag": 0,
+      "ext_time": null
+    },
+    "spotify": {
+      "cat": "Music",
+      "tag": 0,
+      "ext_time": null
+    },
+    "YouTube Music": {
+      "cat": "Music",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Lark Player": {
+      "cat": "Music",
+      "tag": 0,
+      "ext_time": null
+    },
+    "eSound": {
+      "cat": "Music",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Deezer": {
+      "cat": "Music",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Apple Music": {
+      "cat": "Music",
+      "tag": 0,
+      "ext_time": null
+    },
+    "ROBLOX": {
+      "cat": "Games",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Free Fire": {
+      "cat": "Games",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Royal Match": {
+      "cat": "Games",
+      "tag": 0,
+      "ext_time": null
+    },
+    "EA SPORTS FC™ MOBILE 24 SOCCER": {
+      "cat": "Games",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Clash Royale": {
+      "cat": "Games",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Minecraft Pocket Edition": {
+      "cat": "Games",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Shopee": {
+      "cat": "Shopping",
+      "tag": 0,
+      "ext_time": null
+    },
+    "MercadoLibre": {
+      "cat": "Shopping",
+      "tag": 0,
+      "ext_time": null
+    },
+    "SHEIN": {
+      "cat": "Shopping",
+      "tag": 0,
+      "ext_time": null
+    },
+    "AliExpress": {
+      "cat": "Shopping",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Inlog Navegador Coleta": {
+      "cat": "Shopping",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Amazon": {
+      "cat": "Shopping",
+      "tag": 0,
+      "ext_time": null
+    },
+    "OLX Brasil": {
+      "cat": "Shopping",
+      "tag": 0,
+      "ext_time": null
+    }
+  },
+  "tt_kwai": {
+    "Kwai": 68967176867,
+    "TikTok": 175887180000
+  }
+}

@@ -1,236 +1,191 @@
 """
-Classification and category totals.
-Ported from data-updates/index.html (runPipeline + compute logic).
+pipeline_v2.py — 与 cross_check Excel 算法 100% 对齐
 
-Input:  datasets dict from fetch.fetch_all(), tiktok_override, kwai_override
-Output: {
-  cat: {
-    "total":  float billion_min,
-    "top5":   [{"name": str, "display_time": float billion_min, "rank": int}, ...],
-    "others": float billion_min,
-  },
-  ...
-}
-plus:
-  "unknown":    [{"name": str, "time": float}, ...]
-  "kwai_rank":  int
-  "grand_total": float
+输入: csv_data dict[csv_cat_eng, list[{name, time(min)}]]
+    必须包含 'Overall' + 7 个分类 CSV (Social/Photo & Video/Music/News & Magazines/
+    Books & Reference/Games/Shopping)
+
+算法（完全复刻 cross_check Excel 的 4 个 sheet）:
+
+1. 「统一（无分类）」 = Overall CSV 直接读
+2. 「应用（有分类）」 = 7 个分类 CSV 联结，每行一个 (cat_csv, app)
+3. 对每行:
+   类型 (M)         = 该行所在的分类 CSV 名（如 Social）
+   类型调整1 (N)    = IF(该 APP 在所有分类 CSV 里 TotalTime 最大值 == 本行) THEN M ELSE ""
+   类型调整2 (O)    = IF N == "" THEN ""
+                     ELSE IF 人工规则匹配 THEN 人工规则值
+                     ELSE IF L/P > 0.5 THEN N ELSE ""
+   统一时长 (P)     = VLOOKUP Overall sheet → 该 APP 的 Total Time（如果不在 Overall 则用 L 兜底）
+4. 「排序」 sheet:
+   每个 APP 一行 (来自人工分类 sheet 的全部条目)
+   类型 (J)         = IF 人工规则有 THEN 人工规则cat ELSE 类型调整2(英文)
+   统一时长 (K)     = VLOOKUP TT&KWAI → 替换 ELSE 应用（有分类）的统一时长
+5. 「汇总」 sheet:
+   按 类型 (J) 分组累加 统一时长 (K)
+
+最终中文垂类来自 ENG_TO_CN 映射 + 人工规则。
 """
 
 import json
 import os
 import config
 
-_RULES_PATH = os.path.join(os.path.dirname(__file__), "classification_rules.json")
-
-with open(_RULES_PATH, encoding="utf-8") as _f:
-    RULES: dict[str, str] = json.load(_f)
-# Merged WhatsApp is always Social regardless of JSON
-RULES["WhatsApp Messenger & WhatsApp Business"] = "社交"
-
-# Category CSV key → our Chinese category (only the ones that feed Application Time buckets)
-_CSV_KEY_TO_ZH = {
-    "social":   "社交",
-    "books":    "在线阅读",
-    "music":    "音乐/音频",
-    "games":    "游戏",
-    "shopping": "电商",
-    "news":     "新闻资讯",
-    # "video" intentionally omitted – 长视频 uses Overall口径
+# 英文 CSV 类目 → 中文垂类（仅这 6 个直接映射，其余靠人工分类）
+ENG_TO_CN = {
+    'Social': '社交',
+    'Games': '游戏',
+    'Music': '音乐/音频',
+    'News & Magazines': '新闻资讯',
+    'Books & Reference': '在线阅读',
+    'Shopping': '电商',
 }
+# 注意：'Photo & Video' 不在此映射 —— 该 CSV 里的 APP 仅在被人工指派为
+# 「泛短视频/长视频/直播」时才进入对应垂类，否则不参与累加
+# 「直播/长视频/社区/浏览器/搜索/生活服务」完全靠人工分类
+
+CATEGORIES_ZH = config.CATEGORIES_ZH
 
 
-def _apply_overrides(overall, tiktok_bn, kwai_bn):
-    for item in overall:
-        if item["name"] == "TikTok" and tiktok_bn is not None:
-            item["time"] = tiktok_bn
-        elif item["name"] == "Kwai" and kwai_bn is not None:
-            item["time"] = kwai_bn
+def load_manual_rules(path=None):
+    if path is None:
+        path = os.path.join(os.path.dirname(__file__), 'manual_rules.json')
+    if not os.path.exists(path):
+        return {'rules': {}, 'tt_kwai': {}}
+    with open(path, encoding='utf-8') as f:
+        return json.load(f)
 
 
-def _merge_whatsapp(overall):
-    wa_m = next((r for r in overall if r["name"] == "WhatsApp Messenger"), None)
-    wa_b = next((r for r in overall if r["name"] == "WhatsApp Business"), None)
-    if wa_m and wa_b:
-        wa_m["name"] = "WhatsApp Messenger & WhatsApp Business"
-        wa_m["time"] += wa_b["time"]
-        return [r for r in overall if r["name"] != "WhatsApp Business"]
-    if wa_m:
-        wa_m["name"] = "WhatsApp Messenger & WhatsApp Business"
-    return overall
-
-
-def _build_cat_groups(overall, app_to_csv_cat):
-    cat_groups = {c: [] for c in config.CATEGORIES_ZH}
-    unknown = []
-    for item in overall:
-        rule = RULES.get(item["name"])
-        if rule == "忽略":
-            continue
-        if rule and rule in cat_groups:
-            cat_groups[rule].append(item)
-        elif not rule:
-            implied = app_to_csv_cat.get(item["name"])
-            if implied and implied in cat_groups:
-                cat_groups[implied].append(item)
-            elif item["time"] > 1.0:
-                unknown.append(item)
-    return cat_groups, unknown
-
-
-def _supplement_news(cat_groups, cat_csv_times, app_to_csv_cat):
-    """Step 5.5 from index.html: add small news apps from News CSV."""
-    news_csv = cat_csv_times.get("新闻资讯", {})
-    if not news_csv:
-        return
-    existing = {i["name"] for i in cat_groups["新闻资讯"]}
-    # (a) explicit news rules not in Overall CSV
-    for name, cat in RULES.items():
-        if cat != "新闻资讯" or name in existing:
-            continue
-        t = news_csv.get(name)
-        if t:
-            cat_groups["新闻资讯"].append({"name": name, "time": t, "rank": 999})
-            existing.add(name)
-    # (b) news CSV apps with no explicit rule, not claimed by another CSV
-    for name, t in news_csv.items():
-        if name in existing:
-            continue
-        rule = RULES.get(name)
-        if rule == "忽略" or (rule and rule != "新闻资讯"):
-            continue
-        implied = app_to_csv_cat.get(name)
-        if implied and implied != "新闻资讯":
-            continue
-        cat_groups["新闻资讯"].append({"name": name, "time": t, "rank": 999})
-
-
-def _display_val(name, overall_bn):
-    do = config.DISPLAY_OVERRIDES
-    return do[name] / 1e9 if name in do else overall_bn
-
-
-def _compute_category(cat, cat_groups, cat_csv_times):
-    csv_times = cat_csv_times.get(cat, {})
-    has_csv = bool(csv_times)
-    DO = config.DISPLAY_OVERRIDES
-
-    if cat in config.CSV_APP_TIME_CATS and has_csv:
-        # Totals from Application Time; exclude apps explicitly cross-classified
-        cat_total = sum(
-            t for name, t in csv_times.items()
-            if not (RULES.get(name) and RULES[name] != cat and RULES[name] in config.CATEGORIES_ZH)
-        )
-        eligible = [i for i in cat_groups[cat] if i["name"] in csv_times]
-        eligible.sort(key=lambda i: DO.get(i["name"], i["time"] * 1e9), reverse=True)
-        top_items = eligible[:5]
-        top5 = [
-            {
-                "name": i["name"],
-                "display_time": _display_val(i["name"], i["time"]),
-                "rank": i["rank"],
-            }
-            for i in top_items
-        ]
-        # others 与 cat_total 同口径（Application Time），不能用可能被 DISPLAY_OVERRIDES 改过的 display_time
-        others = max(0.0, cat_total - sum(csv_times.get(i["name"], 0.0) for i in top_items))
-
-    elif cat == "社交" and has_csv:
-        cat_total = sum(i["time"] for i in cat_groups[cat])
-        sorted_items = sorted(
-            cat_groups[cat],
-            key=lambda i: csv_times.get(i["name"], i["time"]),
-            reverse=True,
-        )
-        top_items = sorted_items[:5]
-        top5 = [
-            {
-                "name": i["name"],
-                "display_time": _display_val(i["name"], i["time"]),
-                "rank": i["rank"],
-            }
-            for i in top_items
-        ]
-        others = max(0.0, cat_total - sum(i["time"] for i in top_items))
-
-    else:
-        # Overall口径: 长视频/泛短视频/直播/社区/新闻资讯/浏览器搜索/生活服务
-        cat_total = sum(i["time"] for i in cat_groups[cat])
-        sorted_items = sorted(
-            cat_groups[cat],
-            key=lambda i: DO.get(i["name"], i["time"] * 1e9),
-            reverse=True,
-        )
-        top_items = sorted_items[:5]
-        top5 = [
-            {
-                "name": i["name"],
-                "display_time": _display_val(i["name"], i["time"]),
-                "rank": i["rank"],
-            }
-            for i in top_items
-        ]
-        others = max(0.0, cat_total - sum(i["time"] for i in top_items))
-
-    return {"total": cat_total, "top5": top5, "others": others}
-
-
-def run(datasets, tiktok_bn=None, kwai_bn=None):
+def run(csv_data, tiktok_min=None, kwai_min=None, manual_rules_path=None):
     """
-    datasets: output of fetch.fetch_all()
-    tiktok_bn / kwai_bn: manual override in billion minutes (float or None)
-
-    Returns dict with category results + metadata.
+    csv_data: dict[str, list[{name, time}]]
+        Required keys: 'Overall', 'Social', 'Photo & Video', 'Music',
+        'News & Magazines', 'Books & Reference', 'Games', 'Shopping'
+        time 单位: 分钟（与 data.ai 网页 CSV 直接读出一致）
+    tiktok_min/kwai_min: 分钟数, override TT/Kwai 统一时长（不传则用 manual_rules.tt_kwai 默认值）
     """
-    overall = list(datasets["overall"])  # copy
+    manual = load_manual_rules(manual_rules_path)
+    rules_raw = manual.get('rules', {})  # name → {cat, tag, ext_time}
+    # 大小写不敏感的规则索引
+    rules = {k.lower(): v for k, v in rules_raw.items()}
+    def lookup_rule(name):
+        return rules.get(name.lower())
+    tt_kwai = dict(manual.get('tt_kwai', {}))
+    if tiktok_min is not None:
+        tt_kwai['TikTok'] = float(tiktok_min)
+    if kwai_min is not None:
+        tt_kwai['Kwai'] = float(kwai_min)
 
-    # Step 1-3: merge WhatsApp, apply overrides
-    overall = _merge_whatsapp(overall)
-    _apply_overrides(overall, tiktok_bn, kwai_bn)
+    # ---- Step 1: Overall sheet → app_unified[name] = Total Time ----
+    overall = {item['name']: float(item['time'])
+               for item in csv_data.get('Overall', [])
+               if item.get('name') and item.get('time')}
 
-    # Step 4: build cat_csv_times (Application Time buckets)
-    cat_csv_times = {}
-    app_to_csv_cat = {}
-    for csv_key, zh_cat in _CSV_KEY_TO_ZH.items():
-        data = datasets.get(csv_key, {})
-        if not data:
-            continue
-        # Remove standalone WhatsApp records (already merged)
-        data = {k: v for k, v in data.items()
-                if k not in ("WhatsApp Messenger", "WhatsApp Business")}
-        cat_csv_times[zh_cat] = data
-        for name in data:
-            if name not in app_to_csv_cat:
-                app_to_csv_cat[name] = zh_cat
+    # ---- Step 2: 应用（有分类）—— 7 个分类 CSV 联结 ----
+    # 每行: (csv_cat, name, time_in_csv)
+    cat_csvs = {k: v for k, v in csv_data.items() if k != 'Overall'}
+    cat_app_time = {}  # name → {csv_cat: time}
+    for csv_cat, items in cat_csvs.items():
+        for item in items:
+            name = item.get('name')
+            t = float(item.get('time') or 0)
+            if not name or t <= 0:
+                continue
+            cat_app_time.setdefault(name, {})[csv_cat] = t
 
-    # Step 5: classify
-    cat_groups, unknown = _build_cat_groups(overall, app_to_csv_cat)
+    # ---- Step 3: 计算 类型调整1 (cat1) + 类型调整2 (cat2) ----
+    # cat1 = 该 APP 在所有分类 CSV 里 TotalTime 最大者所在的 CSV
+    # cat2 = 人工规则覆盖 OR (cat1 中 L/P > 0.5)
+    name_to_cat2 = {}  # name → English/Chinese cat
+    for name, csv_times in cat_app_time.items():
+        max_csv = max(csv_times.items(), key=lambda x: x[1])
+        cat1 = max_csv[0]      # English
+        max_t = max_csv[1]
+        # P = 统一时长 = overall[name] 兜底用 max_t
+        P = overall.get(name, max_t)
+        if lookup_rule(name):
+            name_to_cat2[name] = lookup_rule(name)['cat']  # Chinese
+        elif max_t / P > 0.5:
+            name_to_cat2[name] = cat1  # 英文
+        # else: cat2="" 不分类
 
-    # Step 5.5: news supplement
-    _supplement_news(cat_groups, cat_csv_times, app_to_csv_cat)
+    # 加上人工规则中 tag=1 的 ext_time（不在 CSV 中也能加）
+    for name, rule in rules_raw.items():
+        if rule.get('tag') == 1:
+            name_to_cat2[name] = rule['cat']
 
-    # Step 6: compute per-category results
+    # ---- Step 4: 「排序」sheet 的统一时长（每 app 唯一）----
+    # K = VLOOKUP TT&KWAI → 替换 ELSE 应用（有分类）的统一时长 (= overall[name] 或 max_t)
+    name_unified = {}
+    for name, cat2 in name_to_cat2.items():
+        if name in tt_kwai:
+            name_unified[name] = float(tt_kwai[name])
+        elif name in overall:
+            name_unified[name] = overall[name]
+        else:
+            # 人工规则添加的 APP（不在任何 CSV）
+            rule = rules.get(name, {})
+            if rule.get('tag') == 1 and rule.get('ext_time'):
+                name_unified[name] = float(rule['ext_time'])
+            elif name in cat_app_time:
+                # 兜底：用分类 CSV 里最大值
+                name_unified[name] = max(cat_app_time[name].values())
+
+    # ---- Step 5: 累加 cat_total + 收集每类 APP ----
+    cat_apps = {c: [] for c in CATEGORIES_ZH}
+    cat_total = {c: 0.0 for c in CATEGORIES_ZH}
+
+    for name, cat2 in name_to_cat2.items():
+        # 英文 → 中文
+        zh_cat = ENG_TO_CN.get(cat2, cat2)
+        if zh_cat in cat_apps:
+            t = name_unified.get(name, 0)
+            if t > 0:
+                cat_apps[zh_cat].append({'name': name, 'time': t})
+                cat_total[zh_cat] += t
+
+    # ---- Step 5b: APP 合并（如 WhatsApp Messenger + WhatsApp Business）----
+    MERGE_GROUPS = getattr(config, 'APP_MERGE_GROUPS', {})
+    # MERGE_GROUPS: {merged_name: [original_name1, original_name2, ...]}
+    # 默认: WhatsApp Messenger & WhatsApp Business
+    if not MERGE_GROUPS:
+        MERGE_GROUPS = {
+            'WhatsApp Messenger & WhatsApp Business': ['WhatsApp Messenger', 'WhatsApp Business'],
+        }
+    for merged_name, originals in MERGE_GROUPS.items():
+        for cat in cat_apps:
+            originals_in_cat = [a for a in cat_apps[cat] if a['name'] in originals]
+            if len(originals_in_cat) >= 2:
+                merged_time = sum(a['time'] for a in originals_in_cat)
+                cat_apps[cat] = [a for a in cat_apps[cat] if a['name'] not in originals]
+                cat_apps[cat].append({'name': merged_name, 'time': merged_time})
+
+    # ---- Step 6: 排序 + Top5 + 其他 ----
     result = {}
-    grand_total = 0.0
-    for cat in config.CATEGORIES_ZH:
-        result[cat] = _compute_category(cat, cat_groups, cat_csv_times)
-        grand_total += result[cat]["total"]
+    top_n = getattr(config, 'TOP_N_PER_CATEGORY', 5)
+    for cat in CATEGORIES_ZH:
+        apps = sorted(cat_apps[cat], key=lambda x: -x['time'])
+        for a in apps:
+            a['display_time'] = a['time'] / 1e9
+        top5 = apps[:top_n]
+        rest_sum = sum(a['time'] for a in apps[top_n:])
+        result[cat] = {
+            'total': cat_total[cat] / 1e9,
+            'top5': top5,
+            'others': rest_sum / 1e9,
+            'all_apps': apps,
+        }
 
-    kwai_item = next((r for r in overall if r["name"] == "Kwai"), None)
-    kwai_rank = kwai_item["rank"] if kwai_item else "—"
+    # ---- Step 7: unknown ----
+    unknown = []
+    for name, t in overall.items():
+        if name not in name_to_cat2 and t / 1e9 > 0.5:
+            unknown.append({'name': name, 'time': t / 1e9})
+    unknown.sort(key=lambda x: -x['time'])
 
-    # 校验 DISPLAY_OVERRIDES：列表里的 APP 必须在 overall 中出现，否则是静默失败（名称变更/拼写错误）
-    overall_names = {r["name"] for r in overall}
-    missing_overrides = [n for n in config.DISPLAY_OVERRIDES if n not in overall_names]
-    if missing_overrides:
-        print(f"\n  ⚠ DISPLAY_OVERRIDES 中以下 APP 未出现在 overall 数据中（覆盖值无效）:")
-        for n in missing_overrides:
-            print(f"      - {n}")
+    grand_total = sum(cat_total.values()) / 1e9
 
     return {
-        "categories": result,
-        "unknown": sorted(unknown, key=lambda i: i["time"], reverse=True),
-        "grand_total": grand_total,
-        "kwai_rank": kwai_rank,
-        "missing_overrides": missing_overrides,
+        'categories': result,
+        'unknown': unknown,
+        'grand_total': grand_total,
     }
