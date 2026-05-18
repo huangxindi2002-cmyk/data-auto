@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Treemap v2</title>
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:#13151f; --panel:#0f1117; --sb:#1a1d2e; --border:#2a2d3e;
+    --text:#e0e0e0; --muted:#888; --green:#5CB85C; --accent:#2BB974;
+  }
+  body { font-family:'Microsoft YaHei','PingFang SC','Helvetica Neue',sans-serif;
+         background:var(--bg); color:var(--text); height:100vh;
+         display:flex; flex-direction:column; overflow:hidden; }
+  #topbar { display:flex; align-items:center; gap:12px; padding:10px 20px;
+            background:var(--panel); border-bottom:1px solid var(--border); flex-shrink:0; }
+  #topbar .logo { font-size:16px; font-weight:700; color:#fff; white-space:nowrap; }
+  #upload-label { padding:6px 14px; background:var(--green); color:#fff; border-radius:6px;
+                  cursor:pointer; font-size:13px; font-weight:600; user-select:none; }
+  #upload-label:hover { opacity:.85; }
+  #file-input { display:none; }
+  #title-input { flex:1; padding:6px 10px; background:#1e2130; border:1px solid #333;
+                 border-radius:6px; color:#fff; font-size:14px; font-family:inherit; }
+  .export-btn { padding:6px 14px; background:#3a3f55; color:#fff; border:none;
+                border-radius:6px; cursor:pointer; font-size:13px; font-family:inherit; }
+  .export-btn:hover { background:#4a5070; }
+  .export-btn.green { background:var(--accent); }
+  .export-btn.green:hover { background:#22a060; }
+  #export-group { display:flex; gap:8px; }
+  #main { display:flex; flex:1; overflow:hidden; }
+  #chart-area { flex:1; padding:20px 24px; overflow-y:auto;
+                display:flex; flex-direction:column; gap:12px; }
+  #chart-title { text-align:center; font-size:18px; font-weight:700; color:#fff; }
+  #empty-state { display:flex; flex-direction:column; align-items:center;
+                 justify-content:center; flex:1; gap:14px; padding:60px;
+                 border:2px dashed var(--border); border-radius:12px; margin:20px; }
+  #empty-state .icon { font-size:48px; }
+  #empty-state .big { font-size:18px; font-weight:600; color:#aaa; }
+  #empty-state .small { font-size:13px; color:#555; max-width:480px; line-height:1.6; text-align:center; }
+  #error-msg { color:#ff6b6b; font-size:13px; background:#2a1010;
+               padding:8px 16px; border-radius:6px; display:none; }
+  #svg-wrapper { background:#fff; border-radius:8px; overflow:hidden;
+                 box-shadow:0 4px 24px rgba(0,0,0,.4); }
+  #svg-wrapper svg { display:block; width:100%; height:auto; }
+
+  #sidebar { width:262px; background:var(--sb); padding:18px 15px;
+             overflow-y:auto; flex-shrink:0; display:flex; flex-direction:column; gap:14px;
+             border-left:1px solid var(--border); }
+  #sidebar h2 { font-size:15px; font-weight:700; color:#fff;
+                padding-bottom:8px; border-bottom:1px solid #333; }
+  .sb-section { display:flex; flex-direction:column; gap:6px; }
+  .sb-section h3 { font-size:10px; font-weight:600; color:var(--muted);
+                   text-transform:uppercase; letter-spacing:.09em; }
+  .sl-row { display:flex; flex-direction:column; gap:3px; }
+  .sl-row .lbl { display:flex; justify-content:space-between; font-size:12px; }
+  .sl-row .val { color:var(--green); font-weight:600; }
+  .sl-row input[type=range] { width:100%; accent-color:var(--green); }
+  .ck-row { display:flex; align-items:center; gap:8px; font-size:12px;
+            cursor:pointer; user-select:none; }
+  .tx-row { display:flex; flex-direction:column; gap:4px; }
+  .tx-row label { font-size:11px; color:#aaa; }
+  .tx-row input { padding:5px 8px; background:#111420; color:#ddd;
+                  border:1px solid #333; border-radius:4px; font-size:12px;
+                  font-family:inherit; }
+  #color-list { display:flex; flex-direction:column; gap:5px; }
+  .cat-cr { display:flex; align-items:center; gap:7px; }
+  .cat-cr input[type=color] { width:24px; height:24px; border:none; border-radius:4px;
+                              cursor:pointer; background:transparent; padding:0; }
+  .cat-cr .cn { flex:1; font-size:11px; }
+  .cat-cr .ct { font-size:10px; color:var(--muted); }
+  .sb-btn { width:100%; padding:7px 0; background:#2d3148; color:#fff;
+            border:1px solid #444; border-radius:6px; cursor:pointer; font-size:12px; }
+  .sb-btn:hover { background:#3a4060; }
+  .sb-hint { font-size:10.5px; color:#555; line-height:1.5; }
+
+  #micro-panel { background:#111624; border:1px solid #3a4060;
+                 border-radius:8px; padding:12px; }
+  #micro-panel .mp-name { font-size:12px; font-weight:700; color:#fff;
+                          margin-bottom:6px; word-break:break-all; }
+  #micro-panel .mp-meta { font-size:10px; color:#888; margin-bottom:10px; }
+
+  .label-group { cursor: move; }
+  .app-rect { cursor: pointer; }
+  .app-rect:hover { filter: brightness(1.06); }
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <span class="logo">📊 Treemap v2</span>
+  <input type="file" id="file-input" accept=".xlsx,.xls" />
+  <label for="file-input" id="upload-label">上传 Excel</label>
+  <input type="text" id="title-input" value="巴西各垂类软件使用时间" placeholder="图表标题" />
+  <div id="export-group" style="display:none">
+    <button class="export-btn" id="btn-svg">导出 SVG</button>
+    <button class="export-btn green" id="btn-png">导出 PNG 2×</button>
+  </div>
+</div>
+
+<div id="main">
+  <div id="chart-area">
+    <div id="empty-state">
+      <div class="icon">📤</div>
+      <div class="big">上传 Excel 文件开始绘图</div>
+      <div class="small">v2：Header 不缩放可换行 · 内部标签精确测字 · 就近溢出 pill · 副标题自动从 sheet 名读月份<br/>
+        Excel 第1行=大类名 · 第2行=合计 · 第3行起=APP名+数值</div>
+      <div id="error-msg"></div>
+    </div>
+    <div id="chart-container" style="display:none">
+      <h2 id="chart-title">巴西各垂类软件使用时间</h2>
+      <div id="svg-wrapper"></div>
+    </div>
+  </div>
+
+  <div id="sidebar" style="display:none">
+    <h2>v2 控件</h2>
+
+    <div class="sb-section">
+      <h3>大标题</h3>
+      <div class="tx-row">
+        <label>主标题（左上角大标题，含月份）</label>
+        <input type="text" id="tx-bigtitle" placeholder="巴西25年7月各垂类软件使用时间" />
+      </div>
+      <div class="sl-row">
+        <div class="lbl"><span>字号</span><span class="val" id="v-fsbig">26px</span></div>
+        <input type="range" id="sl-fsbig" min="14" max="42" value="26" />
+      </div>
+      <div class="cp-row" style="display:flex;align-items:center;gap:8px">
+        <input type="color" id="cl-bigtitle" value="#3a3a3a" style="width:26px;height:26px;border:none;border-radius:4px;background:transparent;padding:0;cursor:pointer" />
+        <label for="cl-bigtitle" style="flex:1;font-size:12px;cursor:pointer">颜色</label>
+      </div>
+    </div>
+
+    <div class="sb-section">
+      <h3>副标题</h3>
+      <div class="tx-row">
+        <label>月份文本（自动从 sheet 名解析，可手动覆盖）</label>
+        <input type="text" id="tx-subtitle" placeholder="2025年7月，月总时长1520（单位：10亿分钟）" />
+      </div>
+    </div>
+
+    <div class="sb-section">
+      <h3>布局</h3>
+      <div class="sl-row">
+        <div class="lbl"><span>大类间距</span><span class="val" id="v-gap">2px</span></div>
+        <input type="range" id="sl-gap" min="0" max="10" value="2" />
+      </div>
+    </div>
+
+    <div class="sb-section">
+      <h3>字号</h3>
+      <div class="sl-row">
+        <div class="lbl"><span>Header 字号</span><span class="val" id="v-fsh">13px</span></div>
+        <input type="range" id="sl-fsh" min="10" max="18" value="13" />
+      </div>
+      <div class="sl-row">
+        <div class="lbl"><span>APP 标签字号</span><span class="val" id="v-fs">12px</span></div>
+        <input type="range" id="sl-fs" min="7" max="20" value="12" />
+      </div>
+      <div class="sl-row">
+        <div class="lbl"><span>溢出 pill 字号</span><span class="val" id="v-fspill">10px</span></div>
+        <input type="range" id="sl-fspill" min="7" max="14" value="10" />
+      </div>
+      <label class="ck-row">
+        <input type="checkbox" id="chk-values" checked style="accent-color:var(--green)" />
+        显示数值
+      </label>
+    </div>
+
+    <div class="sb-section">
+      <h3>大类颜色</h3>
+      <div id="color-list"></div>
+    </div>
+
+    <div id="micro-panel" class="sb-section" style="display:none">
+      <h3>⚙ 选中标签</h3>
+      <div class="mp-name" id="mp-name">—</div>
+      <div class="mp-meta" id="mp-meta">—</div>
+      <div class="sl-row">
+        <div class="lbl"><span>专用字号</span><span class="val" id="mp-fs-val">—</span></div>
+        <input type="range" id="mp-sl-fs" min="6" max="22" value="12" />
+      </div>
+      <label class="ck-row">
+        <input type="checkbox" id="mp-chk-hide" style="accent-color:var(--green)" />
+        隐藏此标签
+      </label>
+      <button class="sb-btn" id="mp-btn-clear" style="margin-top:6px">清除此项设置</button>
+      <button class="sb-btn" id="mp-btn-close" style="margin-top:4px">关闭</button>
+    </div>
+
+    <div class="sb-section">
+      <button class="sb-btn" id="btn-reset">重置标签位置</button>
+      <p class="sb-hint">点击标签 → 微调字号/隐藏<br/>拖拽标签 → 自由移位</p>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict'
+
+// ════════════════════════════════════════════════════════════════════
+// § Persistence
+// ════════════════════════════════════════════════════════════════════
+const STORAGE_KEY = 'treemap_v2_config'
+let projectConfig = {
+  labelOffsets: {},
+  appOverrides: {},
+  subtitleOverride: null,
+}
+function loadConfig() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    if (raw) {
+      const p = JSON.parse(raw)
+      projectConfig.labelOffsets = p.labelOffsets || {}
+      projectConfig.appOverrides = p.appOverrides || {}
+      projectConfig.subtitleOverride = p.subtitleOverride || null
+    }
+  } catch(_) {}
+}
+function saveConfig() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(projectConfig)) } catch(_) {}
+}
+loadConfig()
+
+// ════════════════════════════════════════════════════════════════════
+// § CANVAS
+// ════════════════════════════════════════════════════════════════════
+const CANVAS_W = 1500
+const PILL_SIDE = 28          // 主图区左右各预留这么多 px 让 pill 不被截
+const CHART_X0 = PILL_SIDE
+const CHART_W = CANVAS_W - PILL_SIDE * 2
+const BIGTITLE_H = 56         // 大标题区
+const SUBTITLE_H = 30         // 副标题区
+const HEADER_H = 78           // 大类名区（允许双行 + 相邻冲突时上下交错）
+const CHART_H = 600
+const PILL_PAD = 30           // 上下预留
+const CANVAS_H = BIGTITLE_H + SUBTITLE_H + HEADER_H + CHART_H + PILL_PAD
+const FONT = "'Microsoft YaHei','PingFang SC','Helvetica Neue',sans-serif"
+
+// ════════════════════════════════════════════════════════════════════
+// § 精确文字测量
+// ════════════════════════════════════════════════════════════════════
+let _measureSvg = null, _measureText = null
+function ensureMeasureNode() {
+  if (_measureSvg) return
+  _measureSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+  _measureSvg.style.position = 'absolute'
+  _measureSvg.style.left = '-9999px'
+  _measureSvg.setAttribute('width', '1'); _measureSvg.setAttribute('height', '1')
+  document.body.appendChild(_measureSvg)
+  _measureText = document.createElementNS('http://www.w3.org/2000/svg', 'text')
+  _measureText.setAttribute('font-family', FONT)
+  _measureSvg.appendChild(_measureText)
+}
+const _mc = new Map()
+function measureText(text, fontSize, fontWeight = '400') {
+  if (!text) return 0
+  const k = `${text}|${fontSize}|${fontWeight}`
+  if (_mc.has(k)) return _mc.get(k)
+  ensureMeasureNode()
+  _measureText.setAttribute('font-size', fontSize)
+  _measureText.setAttribute('font-weight', fontWeight)
+  _measureText.textContent = text
+  const w = _measureText.getComputedTextLength()
+  _mc.set(k, w)
+  return w
+}
+
+// ════════════════════════════════════════════════════════════════════
+// § Excel
+// ════════════════════════════════════════════════════════════════════
+function parseExcel(buffer) {
+  const wb = XLSX.read(buffer, { type: 'array' })
+  const sheetName = wb.SheetNames[0]
+  const sheet = wb.Sheets[sheetName]
+  const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: null })
+  if (rows.length < 3) throw new Error('行数不足')
+  const hdr = rows[0], totRow = rows[1]
+  const cats = []
+  for (let c = 1; c < hdr.length; c++) {
+    if (hdr[c] == null) continue
+    const name = String(hdr[c]).trim().replace(/\n/g, '')
+    if (!name) continue
+    cats.push({ name, total: Number(totRow[c]) || 0, colIndex: c, apps: [] })
+  }
+  for (let ri = 2; ri < rows.length; ri++) {
+    const row = rows[ri]
+    if (!row || row[0] == null) continue
+    const appName = String(row[0]).trim()
+    if (!appName) continue
+    for (const cat of cats) {
+      const v = Number(row[cat.colIndex])
+      if (!isNaN(v) && v > 0) cat.apps.push({ name: appName, value: v })
+    }
+  }
+  const filtered = cats.filter(c => c.total > 0 || c.apps.length > 0)
+  // 保持 Excel 原顺序，不按 total 排序
+  return { cats: filtered, sheetName }
+}
+
+function parseSheetMonth(sheetName) {
+  // "2025_07" / "2025-07" / "2025.07" → "2025年7月"
+  if (!sheetName) return null
+  const m = sheetName.match(/(\d{4})[._\-/](\d{1,2})/)
+  if (!m) return null
+  return `${m[1]}年${parseInt(m[2])}月`
+}
+
+// ════════════════════════════════════════════════════════════════════
+// § Colors
+// ════════════════════════════════════════════════════════════════════
+const PRESET_COLORS = {
+  '社交':'#A1E26F','泛短视频':'#5ACB5A','直播':'#2BB974','长视频':'#197A56',
+  '社区':'#64A54F','新闻资讯':'#4A7A3D','在线阅读':'#8CC94F','浏览器/搜索':'#29BA74',
+  '音乐/音频':'#3DAB80','游戏':'#26C6DA','电商':'#00897B','生活服务':'#63A64E',
+}
+const FALLBACK = ['#A1E26F','#5ACB5A','#2BB974','#197A56','#64A54F','#4A7A3D',
+  '#8CC94F','#29BA74','#3DAB80','#26C6DA','#00897B','#63A64E']
+function darkenHex(hex, f) {
+  const r=parseInt(hex.slice(1,3),16), g=parseInt(hex.slice(3,5),16), b=parseInt(hex.slice(5,7),16)
+  const d=v=>Math.round(Math.max(0,v*f)).toString(16).padStart(2,'0')
+  return `#${d(r)}${d(g)}${d(b)}`
+}
+function getAppColor(base, idx) {
+  return darkenHex(base, Math.max(0.65, 1 - idx * 0.05))
+}
+// 格式化百分比：>=1 取整，<1 但>0 取一位小数
+function formatPct(p) {
+  if (p >= 1) return `${Math.round(p)}%`
+  if (p > 0) return `${p.toFixed(1)}%`
+  return '0%'
+}
+// 计算颜色亮度（WCAG），返回 0~1
+function luminance(hex) {
+  const r = parseInt(hex.slice(1,3),16) / 255
+  const g = parseInt(hex.slice(3,5),16) / 255
+  const b = parseInt(hex.slice(5,7),16) / 255
+  const f = c => c <= 0.03928 ? c/12.92 : Math.pow((c+0.055)/1.055, 2.4)
+  return 0.2126*f(r) + 0.7152*f(g) + 0.0722*f(b)
+}
+// 返回与背景色对比度高的文字色
+function textColorOn(bgHex) {
+  return luminance(bgHex) > 0.55 ? '#1a1a1a' : '#ffffff'
+}
+function valueColorOn(bgHex) {
+  return luminance(bgHex) > 0.55 ? 'rgba(40,40,40,0.78)' : 'rgba(255,255,255,0.85)'
+}
+function hexToRgba(hex, a) {
+  const r=parseInt(hex.slice(1,3),16), g=parseInt(hex.slice(3,5),16), b=parseInt(hex.slice(5,7),16)
+  return `rgba(${r},${g},${b},${a})`
+}
+function lightenHex(hex, factor) {
+  // factor 0~1: 0=原色 1=白
+  const r=parseInt(hex.slice(1,3),16), g=parseInt(hex.slice(3,5),16), b=parseInt(hex.slice(5,7),16)
+  const lr = Math.round(r + (255 - r) * factor)
+  const lg = Math.round(g + (255 - g) * factor)
+  const lb = Math.round(b + (255 - b) * factor)
+  return `#${lr.toString(16).padStart(2,'0')}${lg.toString(16).padStart(2,'0')}${lb.toString(16).padStart(2,'0')}`
+}
+
+// ════════════════════════════════════════════════════════════════════
+// § Layout
+// ════════════════════════════════════════════════════════════════════
+function computeLayout(cats, settings, headerH) {
+  const grand = cats.reduce((s,c)=>s+c.total,0)
+  if (!grand) return []
+  const gap = settings.colGap
+  const totalGap = gap * Math.max(0, cats.length-1)
+  const availW = CHART_W - totalGap
+  let cursorX = CHART_X0
+  const yTop = BIGTITLE_H + SUBTITLE_H + headerH
+  return cats.map((cat, catIdx) => {
+    const colW = (cat.total/grand) * availW
+    const named = cat.apps.filter(a => a.name !== '其他').sort((a,b)=>b.value-a.value)
+    const namedSum = named.reduce((s,a)=>s+a.value,0)
+    const otherVal = Math.max(0, cat.total - namedSum)
+    const apps = []
+    let cy = yTop
+    let rank = 1
+    for (const a of named) {
+      const h = (a.value/cat.total) * CHART_H
+      apps.push({
+        key:`${catIdx}::${a.name}`, name:a.name, value:a.value,
+        x:cursorX, y:cy, width:colW, height:h, isOther:false, catIdx, rank: rank++,
+      })
+      cy += h
+    }
+    if (otherVal > 0.5) {
+      const h = (otherVal/cat.total) * CHART_H
+      apps.push({
+        key:`${catIdx}::其他`, name:'其他', value:otherVal,
+        x:cursorX, y:cy, width:colW, height:h, isOther:true, catIdx, rank: rank++,
+      })
+    }
+    const col = {
+      name:cat.name, total:cat.total,
+      pct: formatPct((cat.total/grand)*100),
+      x:cursorX, width:colW, apps, catIdx,
+    }
+    cursorX += colW + gap
+    return col
+  })
+}
+
+// ════════════════════════════════════════════════════════════════════
+// § Header 文字换行（不缩放、不倾斜，仅换行）
+// ════════════════════════════════════════════════════════════════════
+function fitHeaderLines(name, maxW, fs) {
+  // 单行能放下 → 单行
+  if (measureText(name, fs, '400') <= maxW) return [name]
+  // 找中点附近的分隔符断行
+  const seps = ['/', ' ', '·', '&', '-', ':']
+  let bestSplit = -1, bestDist = Infinity
+  const mid = Math.floor(name.length / 2)
+  for (const sep of seps) {
+    for (let i = 1; i < name.length - 1; i++) {
+      if (name[i] === sep) {
+        const d = Math.abs(i - mid)
+        if (d < bestDist) { bestDist = d; bestSplit = i }
+      }
+    }
+    if (bestSplit !== -1) break
+  }
+  if (bestSplit !== -1) {
+    return [
+      name.slice(0, bestSplit + 1).trim() || name.slice(0, bestSplit),
+      name.slice(bestSplit + 1).trim() || name.slice(bestSplit + 1),
+    ].filter(s => s)
+  }
+  // 没分隔符 → 中点硬断
+  return [name.slice(0, mid), name.slice(mid)]
+}
+
+// ════════════════════════════════════════════════════════════════════
+// § 标签决策
+// 返回 { kind: 'inside' | 'pill' | 'hidden', ... }
+// inside: 完全在格子内
+// pill: 浅色 pill 可外溢出格子（覆盖格子原位置）
+// 规则：
+// - 名称单行（不允许换行），数值可以换行
+// - 内置：格子能放下名称单行 + (可选)数值
+// - pill：格子放不下时，pill 中心对准格子中心，宽度=文字所需，可外溢
+// ════════════════════════════════════════════════════════════════════
+function decideLabel(app, settings) {
+  const ovr = projectConfig.appOverrides[app.key] || {}
+  if (ovr.hide) return { kind: 'hidden' }
+  // 零值过滤：该列某个 app 被标记为 _zeroSkip 则跳过
+  if (app._zeroSkip) return { kind: 'hidden' }
+  // 绝对值显示为 0 的子标签不显示（但「其他」块例外，用于填凅余）
+  if (!app.isOther && app.value < 2) return { kind: 'hidden' }
+
+  const wantFS = ovr.fontSize || settings.fs
+  const pillFS = ovr.fontSize || settings.fsPill
+  const valFS = Math.max(7, wantFS - 3)
+  const pillValFS = Math.max(7, pillFS - 2)
+  const showVal = settings.showValues
+  const valText = showVal ? `${Math.round(app.value)}` : null
+  const displayName = app.isOther ? '其他' : app.name
+
+  const padX = 6, padY = 4
+  const usableW = app.width - padX * 2
+  const usableH = app.height - padY * 2
+
+  // ── 尝试内置 ──
+  // 名称单行测量
+  const nameW = measureText(displayName, wantFS, '700')
+  const valW = showVal ? measureText(valText, valFS) : 0
+  const lineH = wantFS * 1.25
+  const valH = showVal ? valFS * 1.2 : 0
+
+  if (usableW >= 14 && usableH >= lineH + valH) {
+    // 单行 + (数值)
+    if (nameW <= usableW && (!showVal || valW <= usableW)) {
+      return {
+        kind: 'inside',
+        fontSize: wantFS, valueFontSize: valFS,
+        name: displayName, valueText: valText,
+        isOther: app.isOther,
+      }
+    }
+    // 缩小字号试试（不到 minFS=7 不再试）
+    for (let fs = wantFS - 1; fs >= 7; fs -= 1) {
+      const w = measureText(displayName, fs, '700')
+      const vfs = Math.max(7, fs - 3)
+      const vw = showVal ? measureText(valText, vfs) : 0
+      const lh = fs * 1.25 + (showVal ? vfs * 1.2 : 0)
+      if (w <= usableW && (!showVal || vw <= usableW) && usableH >= lh) {
+        return {
+          kind: 'inside',
+          fontSize: fs, valueFontSize: vfs,
+          name: displayName, valueText: valText,
+          isOther: app.isOther,
+        }
+      }
+    }
+    // 名称放得下但加上数值放不下 → 仅名称
+    for (let fs = wantFS; fs >= 7; fs -= 1) {
+      const w = measureText(displayName, fs, '700')
+      if (w <= usableW && usableH >= fs * 1.25) {
+        return {
+          kind: 'inside',
+          fontSize: fs, valueFontSize: 0,
+          name: displayName, valueText: null,
+          isOther: app.isOther,
+        }
+      }
+    }
+  }
+
+  // ── 内置失败 → 用 pill 外溢 ──
+  // 「其他」块：太小则隐藏，不外溢（参考图里「其他」块小到看不见时也没有 pill）
+  if (app.isOther) {
+    return { kind: 'hidden' }
+  }
+  // pill 大小：精确测字
+  const pNameW = measureText(displayName, pillFS, '700')
+  const pValW = showVal ? measureText(valText, pillValFS) : 0
+  // 数值可以换行：始终单独一行在名称下方
+  const pillW = Math.max(pNameW, pValW) + 12
+  const pillH = pillFS * 1.25 + (showVal ? pillValFS * 1.2 : 0) + 6
+  return {
+    kind: 'pill',
+    fontSize: pillFS, valueFontSize: pillValFS,
+    name: displayName, valueText: valText,
+    width: pillW, height: pillH,
+    isOther: false,
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════
+// § Pill 全局位置规划
+// 锚点：格子中心
+// 初始位置：pill 中心 = 格子中心（允许外溢）
+// 然后：相邻 pill 重叠时，沿 X 轴推开（在同一垂直带内）
+// ════════════════════════════════════════════════════════════════════
+function placePills(allPills) {
+  // pill 已带 anchorX/anchorY/width/height
+  // 初始位置：pill 中心 = anchor，然后做简单的避让
+  allPills.forEach(p => {
+    const ovr = projectConfig.appOverrides[p.app.key] || {}
+    const off = projectConfig.labelOffsets[p.app.key] || { dx:0, dy:0 }
+    p.x = p.anchorX - p.width / 2 + off.dx
+    p.y = p.anchorY - p.height / 2 + off.dy
+    p.userMoved = !!(off.dx || off.dy)
+  })
+
+  // 用户没拖动的 pill 做自动错位（避免重叠）
+  // 简单 O(n²)：按 anchorY 排序，从上往下扫，遇到与已放置 pill 重叠的，
+  // 沿 Y 方向推开 6px
+  const auto = allPills.filter(p => !p.userMoved)
+  auto.sort((a, b) => a.anchorY - b.anchorY)
+  const placed = []
+  for (const p of auto) {
+    // 预先 clamp X 到画布范围
+    p.x = Math.max(2, Math.min(CANVAS_W - p.width - 2, p.x))
+    let attempts = 0
+    while (attempts < 10) {
+      const conflict = placed.find(q => rectOverlap(p, q, 2))
+      if (!conflict) break
+      // 推开：往离 conflict 中心更远的方向移动
+      const py = p.y + p.height / 2
+      const qy = conflict.y + conflict.height / 2
+      const dy = py < qy ? -(conflict.height / 2 + p.height / 2 + 3 - (qy - py))
+                         :  (conflict.height / 2 + p.height / 2 + 3 - (py - qy))
+      p.y += dy
+      attempts++
+    }
+    // 边界限制：不要超出画布顶部/底部/左右
+    const dynHeaderH = appState._dynHeaderH || HEADER_H
+    const dynCanvasH = appState._dynCanvasH || (BIGTITLE_H + SUBTITLE_H + dynHeaderH + CHART_H + PILL_PAD)
+    const minY = BIGTITLE_H + SUBTITLE_H + dynHeaderH + 2
+    const maxY = BIGTITLE_H + SUBTITLE_H + dynHeaderH + CHART_H + PILL_PAD - p.height - 2
+    p.y = Math.max(minY, Math.min(maxY, p.y))
+    p.x = Math.max(2, Math.min(CANVAS_W - p.width - 2, p.x))
+    placed.push(p)
+  }
+  return allPills
+}
+function rectOverlap(a, b, pad = 0) {
+  return !(a.x + a.width + pad < b.x ||
+           b.x + b.width + pad < a.x ||
+           a.y + a.height + pad < b.y ||
+           b.y + b.height + pad < a.y)
+}
+
+// ════════════════════════════════════════════════════════════════════
+// § Render
+// ════════════════════════════════════════════════════════════════════
+function renderChart() {
+  const cats = appState.categories
+  const settings = appState.settings
+  const colors = appState.colors
+  if (!cats.length) return
+
+  // 预算 header：固定使用 settings.fsHeader，不降级字号，只用 2 行错位
+  const fs = settings.fsHeader
+  const lineH = fs * 1.3
+  const MAX_ROWS = 2
+
+  const preHeaderInfo = cats.map((cat, catIdx) => {
+    if (!cat) return null
+    const grand = cats.reduce((s,c)=>s+c.total,0)
+    const totalGap = settings.colGap * Math.max(0, cats.length-1)
+    const availW = CHART_W - totalGap
+    const colW = (cat.total/grand) * availW
+    const usableW = Math.max(8, colW - 6)
+    const nameW = measureText(cat.name, fs, '700')
+    const lines = (nameW <= colW - 4 || nameW <= colW + 60)
+      ? [cat.name]
+      : fitHeaderLines(cat.name, usableW, fs).slice(0, 2)
+    const pctText = formatPct((cat.total/grand)*100)
+    const occupiedW = Math.max(
+      ...lines.map(l => measureText(l, fs, '700')),
+      measureText(pctText, fs - 2)
+    )
+    return { cat, catIdx, colW, lines, occupiedW, pctText }
+  })
+  // 扫描冲突计算 row 数（限为 2 行）
+  let cursorX = CHART_X0
+  const rowHeights = []
+  preHeaderInfo.forEach(info => {
+    if (!info) return
+    const midX = cursorX + info.colW / 2
+    const halfW = info.occupiedW / 2 + 6
+    const left = midX - halfW
+    const right = midX + halfW
+    let row = -1
+    for (let r = 0; r < rowHeights.length; r++) {
+      if (left >= rowHeights[r]) { row = r; break }
+    }
+    if (row === -1) {
+      if (rowHeights.length < MAX_ROWS) rowHeights.push(right)
+      else {
+        // 已达 MAX_ROWS：填到 lastRight 最小的那行
+        let minR = 0
+        for (let r = 1; r < rowHeights.length; r++) {
+          if (rowHeights[r] < rowHeights[minR]) minR = r
+        }
+        rowHeights[minR] = right
+      }
+    } else {
+      rowHeights[row] = right
+    }
+    cursorX += info.colW + settings.colGap
+  })
+  const totalRows = Math.max(1, Math.min(MAX_ROWS, rowHeights.length))
+  // 动态 header 高度
+  const dynHeaderH = totalRows * (lineH + (fs - 2) * 1.3 + 4) + 14
+  const dynCanvasH = BIGTITLE_H + SUBTITLE_H + dynHeaderH + CHART_H + PILL_PAD
+  appState._dynHeaderH = dynHeaderH
+  appState._dynCanvasH = dynCanvasH
+
+  const layout = computeLayout(cats, settings, dynHeaderH)
+
+  const wrapper = document.getElementById('svg-wrapper')
+  wrapper.innerHTML = ''
+  const svg = d3.select(wrapper).append('svg')
+    .attr('xmlns', 'http://www.w3.org/2000/svg')
+    .attr('viewBox', `0 0 ${CANVAS_W} ${dynCanvasH}`)
+    .style('width', '100%').style('height', 'auto')
+  svg.append('rect').attr('width', CANVAS_W).attr('height', dynCanvasH).attr('fill', '#fff')
+
+  // ── 大标题 ──
+  const bigTitle = appState.bigTitle || ''
+  if (bigTitle) {
+    const titleY = 32
+    const bigFS = appState.settings.fsBigTitle || 26
+    const bigColor = appState.settings.bigTitleColor || '#3a3a3a'
+    // 橙色双箭头 ▶▶
+    const arrowSize = bigFS * 0.85
+    const arrowX = CHART_X0 + 4
+    const arrowG = svg.append('g')
+    arrowG.append('path')
+      .attr('d', `M ${arrowX} ${titleY - arrowSize/2} L ${arrowX + arrowSize*0.7} ${titleY} L ${arrowX} ${titleY + arrowSize/2} Z`)
+      .attr('fill', '#FC5518')
+    arrowG.append('path')
+      .attr('d', `M ${arrowX + arrowSize*0.5} ${titleY - arrowSize/2} L ${arrowX + arrowSize*1.2} ${titleY} L ${arrowX + arrowSize*0.5} ${titleY + arrowSize/2} Z`)
+      .attr('fill', '#FC5518')
+    svg.append('text')
+      .attr('x', arrowX + arrowSize * 1.4 + 8).attr('y', titleY)
+      .attr('text-anchor', 'start').attr('dominant-baseline', 'middle')
+      .attr('fill', bigColor).attr('font-size', bigFS).attr('font-weight', '800')
+      .attr('font-family', FONT).text(bigTitle)
+  }
+
+  // ── 副标题 ──
+  const grandTotal = cats.reduce((s,c) => s + c.total, 0)
+  const monthText = projectConfig.subtitleOverride ||
+    parseSheetMonth(appState.sheetName) || ''
+  const subtitle = monthText
+    ? `${monthText}，月总时长${Math.round(grandTotal)}（单位：10亿分钟）`
+    : `月总时长${Math.round(grandTotal)}（单位：10亿分钟）`
+  svg.append('text')
+    .attr('x', CHART_X0 + 4).attr('y', BIGTITLE_H + 18)
+    .attr('text-anchor', 'start').attr('dominant-baseline', 'middle')
+    .attr('fill', '#222').attr('font-size', 14).attr('font-weight', '700')
+    .attr('font-family', FONT).text(subtitle)
+
+  // ── Header（复用预扫描结果，绘制每列名称+百分比）──
+  const headerInfo = layout.map((col, idx) => {
+    col._base = colors[col.name] || FALLBACK[col.catIdx % FALLBACK.length]
+    const pre = preHeaderInfo[idx]
+    if (!pre) return null
+    return { col, drawLines: pre.lines, occupiedW: pre.occupiedW }
+  })
+
+  // 重新做一次 row 分配（这次基于实际 layout 的 col.x，与预扫描的 cursorX 严格一致）
+  const baseY = BIGTITLE_H + SUBTITLE_H + 8
+  const rowGap = 4
+  const rowHeights2 = []
+  const MAX_ROWS_RENDER = 2
+  for (const info of headerInfo) {
+    if (!info) continue
+    const midX = info.col.x + info.col.width / 2
+    const halfW = info.occupiedW / 2 + 6
+    const left = midX - halfW
+    const right = midX + halfW
+    let row = -1
+    for (let r = 0; r < rowHeights2.length; r++) {
+      if (left >= rowHeights2[r]) { row = r; break }
+    }
+    info.textX = midX  // 默认文字中心 = 列中心
+    info.leader = false
+    if (row === -1) {
+      if (rowHeights2.length < MAX_ROWS_RENDER) {
+        row = rowHeights2.length
+        rowHeights2.push(right)
+      } else {
+        // 超出 MAX_ROWS：选 lastRight 最小的行；并把文字向右偏移到该行的可用空隙
+        let minR = 0
+        for (let r = 1; r < rowHeights2.length; r++) {
+          if (rowHeights2[r] < rowHeights2[minR]) minR = r
+        }
+        row = minR
+        // 文字 X 推到该行 lastRight + halfW + 间距
+        const newCenter = rowHeights2[row] + halfW + 4
+        info.textX = Math.min(newCenter, CANVAS_W - halfW - 4)
+        info.leader = true       // 标记需要画牵引线
+        info.leaderFromX = midX  // 牵引线起点 = 原列中心
+        rowHeights2[row] = info.textX + halfW
+      }
+    } else {
+      rowHeights2[row] = right
+    }
+    info.row = row
+  }
+
+  // 渲染
+  headerInfo.forEach(info => {
+    if (!info) return
+    const { col, drawLines, row, textX, leader, leaderFromX } = info
+    const g = svg.append('g').attr('class', `col-h-${col.catIdx}`)
+    const colMidX = col.x + col.width / 2
+    const totalLines = drawLines.length
+    const rowOffset = row * (lineH + (fs - 2) * 1.3 + rowGap)
+    const startY = baseY + rowOffset + lineH * 0.7
+
+    // 画牵引线：从原列上方一点 → 新文字位置（折线 _|）
+    if (leader) {
+      const lineY1 = baseY                   // 列上方起点
+      const lineY2 = startY - lineH * 0.5    // 文字上方
+      g.append('path')
+        .attr('d', `M ${leaderFromX} ${lineY1} L ${leaderFromX} ${(lineY1 + lineY2)/2} L ${textX} ${(lineY1 + lineY2)/2} L ${textX} ${lineY2}`)
+        .attr('fill', 'none').attr('stroke', col._base)
+        .attr('stroke-width', 0.8).attr('opacity', 0.7)
+    }
+
+    drawLines.forEach((line, li) => {
+      g.append('text')
+        .attr('x', textX).attr('y', startY + li * lineH)
+        .attr('text-anchor', 'middle').attr('dominant-baseline', 'middle')
+        .attr('fill', col._base).attr('font-size', fs).attr('font-weight', '700')
+        .attr('font-family', FONT).text(line)
+    })
+    const pctY = startY + totalLines * lineH
+    g.append('text')
+      .attr('x', textX).attr('y', pctY)
+      .attr('text-anchor', 'middle').attr('dominant-baseline', 'middle')
+      .attr('fill', col._base).attr('font-size', fs - 2).attr('font-weight', '400')
+      .attr('font-family', FONT).text(`${col.pct}`)
+  })
+
+  // ── 第 1 阶段：决策标签，画块体 ──
+  const allPills = []
+  layout.forEach(col => {
+    const base = col._base
+    const g = svg.append('g').attr('class', `col-${col.catIdx}`)
+
+    // 零值过滤：该列中 round(value)===0 的 app 超过 2 个，只保留前 2 个，其余打上 _zeroSkip
+    const zeroApps = col.apps.filter(a => !a.isOther && Math.round(a.value) === 0)
+    if (zeroApps.length > 2) {
+      // 按 value 降序，前 2 保留、其余跳过
+      zeroApps.sort((a, b) => b.value - a.value)
+      zeroApps.slice(2).forEach(a => { a._zeroSkip = true })
+    }
+
+    col.apps.forEach((app, idx) => {
+      const appColor = app.isOther ? '#bcbcbc' : getAppColor(base, idx)
+      g.append('rect')
+        .attr('class', 'app-rect')
+        .attr('x', app.x + 0.5).attr('y', app.y + 0.5)
+        .attr('width', Math.max(0, app.width - 1))
+        .attr('height', Math.max(0, app.height - 1))
+        .attr('fill', appColor).attr('stroke', '#fff').attr('stroke-width', 1)
+        .on('click', function(event) {
+          event.stopPropagation()
+          openMicroPanel(app)
+        })
+
+      const d = decideLabel(app, settings)
+      d._bgColor = appColor   // 传递实际背景色给文字色判断
+      app._decision = d
+      if (d.kind === 'inside') {
+        renderInsideLabel(g, app, d)
+      } else if (d.kind === 'pill') {
+        // 收集到 pill 队列里，全局规划完位置后统一渲染
+        allPills.push({
+          app, decision: d, color: base,
+          width: d.width, height: d.height,
+          anchorX: app.x + app.width / 2,
+          anchorY: app.y + app.height / 2,
+        })
+      }
+    })
+  })
+
+  // ── 第 2 阶段：pill 位置规划 + 渲染 ──
+  placePills(allPills)
+  const pillG = svg.append('g').attr('class', 'pills')
+  allPills.forEach(p => renderPill(pillG, p, settings))
+}
+
+function renderInsideLabel(g, app, d) {
+  // 根据背景色亮度计算文字色
+  const bgHex = d._bgColor || (d.isOther ? '#bcbcbc' : '#888888')
+  const labelColor = textColorOn(bgHex)
+  const valColor = valueColorOn(bgHex)
+  const fs = d.fontSize, valFS = d.valueFontSize
+  const hasVal = !!d.valueText
+  const lineH = fs * 1.25
+  const valLineH = hasVal ? valFS * 1.2 : 0
+  const totalH = lineH + valLineH
+  const cx = app.x + app.width / 2
+  const startY = app.y + app.height / 2 - totalH / 2 + lineH * 0.5
+
+  const off = projectConfig.labelOffsets[app.key] || { dx:0, dy:0 }
+  const lg = g.append('g').attr('class', 'label-group')
+    .attr('transform', (off.dx || off.dy) ? `translate(${off.dx},${off.dy})` : null)
+
+  lg.append('text')
+    .attr('x', cx).attr('y', startY)
+    .attr('text-anchor', 'middle').attr('dominant-baseline', 'middle')
+    .attr('fill', labelColor).attr('font-size', fs).attr('font-weight', '700')
+    .attr('font-family', FONT).text(d.name)
+  if (hasVal) {
+    lg.append('text')
+      .attr('x', cx).attr('y', startY + lineH * 0.85 + valFS * 0.4)
+      .attr('text-anchor', 'middle').attr('dominant-baseline', 'middle')
+      .attr('fill', valColor).attr('font-size', valFS)
+      .attr('font-family', FONT).text(d.valueText)
+  }
+  lg.on('click', function(event) {
+    event.stopPropagation()
+    openMicroPanel(app)
+  })
+  lg.call(d3.drag()
+    .on('start', e => e.sourceEvent.stopPropagation())
+    .on('drag', e => {
+      const k = app.key
+      const p = projectConfig.labelOffsets[k] || {dx:0,dy:0}
+      projectConfig.labelOffsets[k] = { dx: p.dx + e.dx, dy: p.dy + e.dy }
+      saveConfig()
+      lg.attr('transform', `translate(${projectConfig.labelOffsets[k].dx},${projectConfig.labelOffsets[k].dy})`)
+    })
+  )
+}
+
+function renderPill(g, p, settings) {
+  const d = p.decision
+  const lg = g.append('g').attr('class', 'label-group')
+  const bgFill = lightenHex(p.color, 0.55)   // 浅色背景
+  const stroke = p.color                      // 类别色边框
+  const textColor = '#1a1a1a'                 // 深色文字
+
+  lg.append('rect')
+    .attr('x', p.x).attr('y', p.y).attr('width', p.width).attr('height', p.height)
+    .attr('rx', 2).attr('ry', 2)
+    .attr('fill', bgFill).attr('stroke', stroke).attr('stroke-width', 1)
+
+  const cx = p.x + p.width / 2
+  const fs = d.fontSize, valFS = d.valueFontSize
+  const hasVal = !!d.valueText
+  const lineH = fs * 1.25
+  const valLineH = hasVal ? valFS * 1.2 : 0
+  const totalH = lineH + valLineH
+  const startY = p.y + p.height / 2 - totalH / 2 + lineH * 0.5
+
+  lg.append('text')
+    .attr('x', cx).attr('y', startY)
+    .attr('text-anchor', 'middle').attr('dominant-baseline', 'middle')
+    .attr('fill', textColor).attr('font-size', fs).attr('font-weight', '700')
+    .attr('font-family', FONT).text(d.name)
+  if (hasVal) {
+    lg.append('text')
+      .attr('x', cx).attr('y', startY + lineH * 0.85 + valFS * 0.4)
+      .attr('text-anchor', 'middle').attr('dominant-baseline', 'middle')
+      .attr('fill', textColor).attr('font-size', valFS)
+      .attr('font-family', FONT).text(d.valueText)
+  }
+
+  lg.on('click', function(event) {
+    event.stopPropagation()
+    openMicroPanel(p.app)
+  })
+  lg.call(d3.drag()
+    .on('start', e => e.sourceEvent.stopPropagation())
+    .on('drag', e => {
+      const k = p.app.key
+      const off = projectConfig.labelOffsets[k] || { dx:0, dy:0 }
+      projectConfig.labelOffsets[k] = { dx: off.dx + e.dx, dy: off.dy + e.dy }
+      saveConfig()
+      // 直接重绘（pill 位置可能与其他 pill 冲突）
+      renderChart()
+    })
+  )
+}
+
+// ════════════════════════════════════════════════════════════════════
+// § Micro panel
+// ════════════════════════════════════════════════════════════════════
+let selectedApp = null
+function openMicroPanel(app) {
+  selectedApp = app
+  const panel = document.getElementById('micro-panel')
+  panel.style.display = 'flex'
+  document.getElementById('mp-name').textContent = app.name + (app.isOther ? '（其他）' : '')
+  const catName = appState.categories[app.catIdx]?.name || ''
+  document.getElementById('mp-meta').textContent =
+    `${Math.round(app.value)} · 排名 #${app.rank} · ${catName}`
+  const ovr = projectConfig.appOverrides[app.key] || {}
+  const fs = ovr.fontSize || appState.settings.fs
+  document.getElementById('mp-sl-fs').value = fs
+  document.getElementById('mp-fs-val').textContent = fs + 'px'
+  document.getElementById('mp-chk-hide').checked = !!ovr.hide
+}
+function patchOverride(updates) {
+  if (!selectedApp) return
+  if (!projectConfig.appOverrides[selectedApp.key]) projectConfig.appOverrides[selectedApp.key] = {}
+  Object.assign(projectConfig.appOverrides[selectedApp.key], updates)
+  saveConfig()
+  renderChart()
+}
+document.getElementById('mp-sl-fs').addEventListener('input', e => {
+  document.getElementById('mp-fs-val').textContent = e.target.value + 'px'
+  patchOverride({ fontSize: +e.target.value })
+})
+document.getElementById('mp-chk-hide').addEventListener('change', e =>
+  patchOverride({ hide: e.target.checked }))
+document.getElementById('mp-btn-clear').addEventListener('click', () => {
+  if (!selectedApp) return
+  delete projectConfig.appOverrides[selectedApp.key]
+  delete projectConfig.labelOffsets[selectedApp.key]
+  saveConfig()
+  renderChart()
+  document.getElementById('micro-panel').style.display = 'none'
+  selectedApp = null
+})
+document.getElementById('mp-btn-close').addEventListener('click', () => {
+  document.getElementById('micro-panel').style.display = 'none'
+  selectedApp = null
+})
+document.getElementById('chart-area').addEventListener('click', e => {
+  if (!e.target.closest('svg')) {
+    document.getElementById('micro-panel').style.display = 'none'
+    selectedApp = null
+  }
+})
+
+// ════════════════════════════════════════════════════════════════════
+// § State + sliders
+// ════════════════════════════════════════════════════════════════════
+let appState = {
+  categories: [],
+  sheetName: null,
+  colors: { ...PRESET_COLORS },
+  settings: {
+    colGap: 2,
+    fsHeader: 13,
+    fs: 12,
+    fsPill: 10,
+    fsBigTitle: 26,
+    bigTitleColor: '#3a3a3a',
+    showValues: true,
+  },
+  bigTitle: '巴西各垂类软件使用时间',
+}
+function buildColorList() {
+  const list = document.getElementById('color-list')
+  list.innerHTML = ''
+  appState.categories.forEach((cat, i) => {
+    const row = document.createElement('label')
+    row.className = 'cat-cr'
+    const picker = document.createElement('input')
+    picker.type = 'color'
+    picker.value = appState.colors[cat.name] || FALLBACK[i % FALLBACK.length]
+    picker.addEventListener('input', e => {
+      appState.colors[cat.name] = e.target.value
+      renderChart()
+    })
+    const ns = document.createElement('span'); ns.className='cn'; ns.textContent=cat.name
+    const ts = document.createElement('span'); ts.className='ct'; ts.textContent=Math.round(cat.total)
+    row.append(picker, ns, ts)
+    list.appendChild(row)
+  })
+}
+function bindSlider(id, valId, key, suffix='') {
+  const sl = document.getElementById(id), vl = document.getElementById(valId)
+  sl.addEventListener('input', () => {
+    appState.settings[key] = +sl.value
+    vl.textContent = sl.value + suffix
+    renderChart()
+  })
+}
+bindSlider('sl-gap',    'v-gap',    'colGap',   'px')
+bindSlider('sl-fsh',    'v-fsh',    'fsHeader', 'px')
+bindSlider('sl-fs',     'v-fs',     'fs',       'px')
+bindSlider('sl-fspill', 'v-fspill', 'fsPill',   'px')
+document.getElementById('chk-values').addEventListener('change', e => {
+  appState.settings.showValues = e.target.checked; renderChart()
+})
+document.getElementById('btn-reset').addEventListener('click', () => {
+  projectConfig.labelOffsets = {}; saveConfig(); renderChart()
+})
+document.getElementById('title-input').addEventListener('input', e => {
+  document.getElementById('chart-title').textContent = e.target.value
+})
+document.getElementById('tx-subtitle').addEventListener('input', e => {
+  projectConfig.subtitleOverride = e.target.value || null
+  saveConfig()
+  renderChart()
+})
+document.getElementById('tx-bigtitle').addEventListener('input', e => {
+  appState.bigTitle = e.target.value || ''
+  renderChart()
+})
+document.getElementById('sl-fsbig').addEventListener('input', e => {
+  appState.settings.fsBigTitle = +e.target.value
+  document.getElementById('v-fsbig').textContent = e.target.value + 'px'
+  renderChart()
+})
+document.getElementById('cl-bigtitle').addEventListener('input', e => {
+  appState.settings.bigTitleColor = e.target.value
+  renderChart()
+})
+
+// File
+function showChart() {
+  document.getElementById('empty-state').style.display = 'none'
+  document.getElementById('chart-container').style.display = 'flex'
+  document.getElementById('chart-container').style.flexDirection = 'column'
+  document.getElementById('chart-container').style.gap = '10px'
+  document.getElementById('sidebar').style.display = 'flex'
+  document.getElementById('export-group').style.display = 'flex'
+}
+function showError(msg) {
+  const el = document.getElementById('error-msg')
+  el.textContent = msg; el.style.display = 'block'
+}
+function handleFile(file) {
+  if (!file) return
+  const lbl = document.getElementById('upload-label')
+  lbl.textContent = '解析中…'
+  document.getElementById('error-msg').style.display = 'none'
+  const rd = new FileReader()
+  rd.onload = e => {
+    try {
+      const { cats, sheetName } = parseExcel(new Uint8Array(e.target.result))
+      if (!cats.length) throw new Error('未找到有效数据')
+      appState.categories = cats
+      appState.sheetName = sheetName
+      cats.forEach((cat, i) => {
+        if (!appState.colors[cat.name]) appState.colors[cat.name] = FALLBACK[i % FALLBACK.length]
+      })
+      buildColorList(); showChart(); renderChart()
+      // 副标题输入框预填解析结果
+      const auto = parseSheetMonth(sheetName)
+      if (auto && !projectConfig.subtitleOverride) {
+        document.getElementById('tx-subtitle').value = ''
+        document.getElementById('tx-subtitle').placeholder = `自动：${auto}，月总时长XXX...`
+      }
+      // 大标题预填：如 sheet 名能解析出月份，生成「巴西YY年M月各垂类软件使用时间」
+      if (auto) {
+        const m2 = auto.match(/(\d{4})年(\d{1,2})月/)
+        if (m2) {
+          const yr2 = m2[1].slice(2)
+          appState.bigTitle = `巴西${yr2}年${m2[2]}月各垂类软件使用时间`
+          document.getElementById('tx-bigtitle').value = appState.bigTitle
+        }
+      }
+    } catch(err) {
+      showError(`解析失败：${err.message}`)
+    } finally {
+      lbl.textContent = '上传 Excel'
+    }
+  }
+  rd.onerror = () => { showError('文件读取失败'); lbl.textContent = '上传 Excel' }
+  rd.readAsArrayBuffer(file)
+}
+document.getElementById('file-input').addEventListener('change', e => {
+  handleFile(e.target.files[0]); e.target.value = ''
+})
+document.getElementById('chart-area').addEventListener('dragover', e => e.preventDefault())
+document.getElementById('chart-area').addEventListener('drop', e => {
+  e.preventDefault(); handleFile(e.dataTransfer.files[0])
+})
+
+// 自动加载 URL ?excel=... 参数指定的 Excel
+;(function autoLoadFromUrl() {
+  const params = new URLSearchParams(window.location.search)
+  const excelUrl = params.get('excel')
+  if (!excelUrl) return
+  const lbl = document.getElementById('upload-label')
+  lbl.textContent = '加载中…'
+  fetch(excelUrl)
+    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.arrayBuffer() })
+    .then(buf => {
+      try {
+        const { cats, sheetName } = parseExcel(new Uint8Array(buf))
+        if (!cats.length) throw new Error('未找到有效数据')
+        appState.categories = cats
+        appState.sheetName = sheetName
+        cats.forEach((cat, i) => {
+          if (!appState.colors[cat.name]) appState.colors[cat.name] = FALLBACK[i % FALLBACK.length]
+        })
+        buildColorList(); showChart(); renderChart()
+        const auto = parseSheetMonth(sheetName)
+        if (auto && !projectConfig.subtitleOverride) {
+          document.getElementById('tx-subtitle').placeholder = `自动：${auto}，月总时长XXX...`
+        }
+        if (auto) {
+          const m2 = auto.match(/(\d{4})年(\d{1,2})月/)
+          if (m2) {
+            const yr2 = m2[1].slice(2)
+            appState.bigTitle = `巴西${yr2}年${m2[2]}月各垂类软件使用时间`
+            document.getElementById('tx-bigtitle').value = appState.bigTitle
+          }
+        }
+      } catch(err) {
+        showError('自动加载失败：' + err.message)
+      } finally {
+        lbl.textContent = '上传 Excel'
+      }
+    })
+    .catch(err => { showError('自动加载失败：' + err.message); lbl.textContent = '上传 Excel' })
+})()
+
+// Export
+const getSvg = () => document.querySelector('#svg-wrapper svg')
+document.getElementById('btn-svg').addEventListener('click', () => {
+  const s = getSvg(); if (!s) return
+  let str = new XMLSerializer().serializeToString(s)
+  str = str.replace(/(<svg[^>]*>)/,
+    `$1<defs><style>text{font-family:'Microsoft YaHei','PingFang SC','Helvetica Neue',sans-serif}</style></defs>`)
+  const t = document.getElementById('title-input').value || 'treemap_v2'
+  triggerDL(new Blob([str], { type:'image/svg+xml;charset=utf-8' }), t + '.svg')
+})
+document.getElementById('btn-png').addEventListener('click', () => {
+  const s = getSvg(); if (!s) return
+  const vb = s.getAttribute('viewBox').split(' ').map(Number)
+  const sc = 2, w = vb[2] * sc, h = vb[3] * sc
+  const blob = new Blob([new XMLSerializer().serializeToString(s)], { type:'image/svg+xml;charset=utf-8' })
+  const url = URL.createObjectURL(blob)
+  const cv = document.createElement('canvas')
+  cv.width = w; cv.height = h
+  const ctx = cv.getContext('2d')
+  ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h)
+  const img = new Image()
+  img.onload = () => {
+    ctx.drawImage(img, 0, 0, w, h)
+    URL.revokeObjectURL(url)
+    const t = document.getElementById('title-input').value || 'treemap_v2'
+    cv.toBlob(b => triggerDL(b, t + '.png'), 'image/png')
+  }
+  img.onerror = () => { URL.revokeObjectURL(url); alert('PNG 导出失败') }
+  img.src = url
+})
+function triggerDL(blob, name) {
+  const url = URL.createObjectURL(blob)
+  const a = Object.assign(document.createElement('a'), { href:url, download:name })
+  document.body.appendChild(a); a.click(); document.body.removeChild(a)
+  setTimeout(() => URL.revokeObjectURL(url), 1000)
+}
+</script>
+</body>
+</html>

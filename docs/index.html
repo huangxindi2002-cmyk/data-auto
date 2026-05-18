@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>巴西数据自动更新</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Microsoft YaHei','PingFang SC','Helvetica Neue',sans-serif;
+       background:#13151f;color:#e0e0e0;min-height:100vh;padding:32px 16px;}
+  .wrap{max-width:880px;margin:0 auto;}
+  h1{font-size:24px;margin-bottom:6px;color:#fff;}
+  .sub{color:#888;font-size:13px;margin-bottom:28px;}
+  .card{background:#1a1d2e;border:1px solid #2a2d3e;border-radius:12px;padding:24px;margin-bottom:20px;}
+  .card h2{font-size:16px;color:#fff;margin-bottom:18px;display:flex;align-items:center;gap:8px;}
+  .row{display:flex;gap:12px;margin-bottom:14px;flex-wrap:wrap;}
+  .field{flex:1;min-width:160px;display:flex;flex-direction:column;gap:6px;}
+  .field label{font-size:12px;color:#aaa;}
+  .field input{padding:10px 12px;background:#111420;color:#e0e0e0;border:1px solid #333;
+               border-radius:6px;font-size:14px;font-family:inherit;}
+  .field input:focus{outline:none;border-color:#2BB974;}
+  .field small{font-size:11px;color:#666;}
+  .btn{padding:10px 22px;background:#2BB974;color:#fff;border:none;border-radius:6px;
+       cursor:pointer;font-size:14px;font-weight:600;font-family:inherit;}
+  .btn:hover{background:#229960;}
+  .btn:disabled{background:#444;cursor:not-allowed;}
+  .btn-secondary{background:#3a3f55;}
+  .btn-secondary:hover{background:#4a5070;}
+  .status{margin-top:16px;padding:12px 14px;border-radius:6px;font-size:13px;display:none;}
+  .status.info{background:#1a2a3a;color:#7cc;border:1px solid #2a3a4a;display:block;}
+  .status.ok  {background:#1a2a1a;color:#7c7;border:1px solid #2a4a2a;display:block;}
+  .status.err {background:#2a1a1a;color:#f88;border:1px solid #4a2a2a;display:block;}
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th,td{padding:10px 12px;text-align:left;border-bottom:1px solid #2a2d3e;}
+  th{color:#888;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.05em;}
+  td a{color:#2BB974;text-decoration:none;font-weight:600;}
+  td a:hover{text-decoration:underline;}
+  .empty{text-align:center;color:#555;padding:30px;}
+  .pat-input{flex:2;}
+  details{margin-top:12px;}
+  details summary{cursor:pointer;color:#888;font-size:12px;padding:6px 0;}
+  details summary:hover{color:#aaa;}
+  pre{background:#0a0c14;padding:12px;border-radius:6px;font-size:11px;color:#aaa;
+      overflow-x:auto;white-space:pre-wrap;margin-top:8px;}
+  code{background:#0a0c14;padding:2px 6px;border-radius:3px;font-size:12px;color:#7cc;}
+  .progress{margin-top:14px;padding:12px;background:#111420;border-radius:6px;font-size:12px;display:none;}
+  .progress.active{display:block;}
+  .progress .label{color:#888;margin-bottom:6px;}
+  .progress .bar{height:4px;background:#2a2d3e;border-radius:2px;overflow:hidden;}
+  .progress .fill{height:100%;background:#2BB974;width:0;transition:width .3s;
+                  animation:pulse 2s ease-in-out infinite;}
+  @keyframes pulse{0%{opacity:1;}50%{opacity:.4;}100%{opacity:1;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>📊 巴西数据自动更新</h1>
+  <div class="sub">触发 GitHub Actions 拉取 data.ai → 生成 Excel → 可视化</div>
+
+  <!-- ─── 触发更新 ─── -->
+  <div class="card">
+    <h2>🚀 启动新一次更新</h2>
+    <div class="row">
+      <div class="field">
+        <label>月份</label>
+        <input id="i-month" placeholder="2026-04" />
+        <small>YYYY-MM</small>
+      </div>
+      <div class="field">
+        <label>TikTok（十亿分钟）</label>
+        <input id="i-tt" placeholder="175.887" />
+        <small>手工填入</small>
+      </div>
+      <div class="field">
+        <label>Kwai（十亿分钟）</label>
+        <input id="i-kw" placeholder="68.967" />
+        <small>手工填入</small>
+      </div>
+    </div>
+    <div class="row" style="align-items:flex-end;">
+      <div class="field pat-input">
+        <label>GitHub Personal Access Token (PAT)</label>
+        <input id="i-pat" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" />
+        <small>需要 <code>repo</code> + <code>workflow</code> 权限。仅存浏览器 localStorage，不上传到服务器。</small>
+      </div>
+      <div class="field" style="flex:0 0 auto;">
+        <label>&nbsp;</label>
+        <button class="btn" id="btn-run">触发更新</button>
+      </div>
+    </div>
+    <div class="status" id="status"></div>
+    <div class="progress" id="progress">
+      <div class="label" id="progress-label">运行中…</div>
+      <div class="bar"><div class="fill"></div></div>
+    </div>
+    <details>
+      <summary>❓ 怎么生成 PAT？怎么配置？</summary>
+      <pre>1. 登录 GitHub → 右上头像 → Settings
+2. 左侧 Developer settings → Personal access tokens → Tokens (classic)
+3. Generate new token (classic)
+   - Note: data-auto
+   - Expiration: 90 天
+   - Scopes 勾选: ☑ repo  ☑ workflow
+4. 生成后复制 ghp_xxxxxxxx，粘贴到上面 PAT 输入框
+5. 仓库 Settings → Secrets and variables → Actions
+   → New repository secret: 名字 DATAAI_API_KEY, 值 = data.ai 的 key</pre>
+    </details>
+  </div>
+
+  <!-- ─── 历史数据 ─── -->
+  <div class="card">
+    <h2>📂 历史数据 <button class="btn btn-secondary" id="btn-refresh" style="margin-left:auto;font-size:12px;padding:6px 14px;">🔄 刷新</button></h2>
+    <div id="history-area">
+      <div class="empty">加载中…</div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── 配置 ── */
+const REPO_OWNER = 'huangxindi2002-cmyk';
+const REPO_NAME  = 'data-auto';
+const WORKFLOW_FILE = 'update.yml';
+const DEFAULT_BRANCH = 'main';
+const TREEMAP_PAGE = 'treemap.html';
+const DATA_DIR = 'data/';
+const INDEX_URL = DATA_DIR + 'index.json';
+
+/* ── 持久化 ── */
+const $ = id => document.getElementById(id);
+['i-month','i-tt','i-kw','i-pat'].forEach(k=>{
+  const el = $(k);
+  el.value = localStorage.getItem(k) || '';
+  el.addEventListener('input', ()=>localStorage.setItem(k, el.value));
+});
+// 默认月份 = 上个月
+if (!$('i-month').value) {
+  const d = new Date(); d.setMonth(d.getMonth()-1);
+  $('i-month').value = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+}
+
+/* ── 状态显示 ── */
+function setStatus(msg, kind='info') {
+  const s = $('status');
+  s.className = 'status '+kind;
+  s.innerHTML = msg;
+}
+function setProgress(label, active=true) {
+  $('progress').className = active ? 'progress active' : 'progress';
+  $('progress-label').textContent = label;
+}
+
+/* ── 触发 workflow ── */
+$('btn-run').addEventListener('click', async ()=>{
+  const month = $('i-month').value.trim();
+  const tt = $('i-tt').value.trim();
+  const kw = $('i-kw').value.trim();
+  const pat = $('i-pat').value.trim();
+  if (!month || !tt || !kw || !pat) { setStatus('❌ 请填齐所有字段', 'err'); return; }
+  if (!/^\d{4}-\d{2}$/.test(month)) { setStatus('❌ 月份格式错: 应为 YYYY-MM', 'err'); return; }
+
+  $('btn-run').disabled = true;
+  setStatus('⏳ 触发中…', 'info');
+  setProgress('触发 workflow…');
+
+  try {
+    // POST dispatch
+    const dispatchUrl = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/actions/workflows/${WORKFLOW_FILE}/dispatches`;
+    const r1 = await fetch(dispatchUrl, {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer '+pat,
+        'Accept': 'application/vnd.github+json',
+        'X-GitHub-Api-Version': '2022-11-28',
+      },
+      body: JSON.stringify({
+        ref: DEFAULT_BRANCH,
+        inputs: { month, tiktok: tt, kwai: kw, country: 'BR' }
+      }),
+    });
+    if (!r1.ok) {
+      const err = await r1.text();
+      throw new Error('Dispatch 失败 ('+r1.status+'): '+err.slice(0,300));
+    }
+    setStatus(`✓ 已触发 <b>${month}</b>。正在等待 GitHub Actions 启动…`, 'ok');
+    setProgress('等待 GitHub 启动 runner…');
+
+    // 轮询最新 run
+    await new Promise(r=>setTimeout(r, 4000));
+    let runId = null, runUrl = null;
+    for (let i=0;i<10;i++) {
+      const runsUrl = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/actions/workflows/${WORKFLOW_FILE}/runs?per_page=5`;
+      const r2 = await fetch(runsUrl, { headers: { 'Authorization':'Bearer '+pat }});
+      const j = await r2.json();
+      const cand = (j.workflow_runs||[]).find(x => x.event==='workflow_dispatch');
+      if (cand && Date.now() - new Date(cand.created_at).getTime() < 5*60*1000) {
+        runId = cand.id; runUrl = cand.html_url; break;
+      }
+      await new Promise(r=>setTimeout(r, 3000));
+    }
+    if (!runUrl) {
+      setStatus(`✓ 已触发，但暂时找不到 run ID。<br/>请到 <a href="https://github.com/${REPO_OWNER}/${REPO_NAME}/actions" target="_blank" style="color:#2BB974;">Actions 页面</a> 查看进度（通常 5~10 分钟完成）`, 'ok');
+      $('btn-run').disabled = false;
+      setProgress('', false);
+      return;
+    }
+
+    setStatus(`✓ Run 已开始: <a href="${runUrl}" target="_blank" style="color:#2BB974;">查看实时日志 ↗</a>`, 'ok');
+
+    // 轮询状态
+    let lastStatus = '';
+    while (true) {
+      await new Promise(r=>setTimeout(r, 10000));
+      const r3 = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/actions/runs/${runId}`, {
+        headers: { 'Authorization':'Bearer '+pat },
+      });
+      const j = await r3.json();
+      const st = j.status, conc = j.conclusion;
+      if (st !== lastStatus) {
+        lastStatus = st;
+        setProgress(`Run 状态: ${st}${conc ? ' / '+conc : ''}`);
+      }
+      if (st === 'completed') {
+        if (conc === 'success') {
+          setStatus(`✅ <b>${month}</b> 更新完成！稍候几秒刷新即可在下方看到。<br/><a href="${runUrl}" target="_blank" style="color:#2BB974;">查看日志 ↗</a>`, 'ok');
+          setProgress('', false);
+          await new Promise(r=>setTimeout(r, 8000));
+          await loadHistory();
+        } else {
+          setStatus(`❌ Run 失败 (${conc})。<br/><a href="${runUrl}" target="_blank" style="color:#f88;">查看日志排查 ↗</a>`, 'err');
+          setProgress('', false);
+        }
+        break;
+      }
+    }
+  } catch (e) {
+    setStatus('❌ '+e.message, 'err');
+    setProgress('', false);
+  } finally {
+    $('btn-run').disabled = false;
+  }
+});
+
+/* ── 历史数据列表 ── */
+async function loadHistory() {
+  const area = $('history-area');
+  area.innerHTML = '<div class="empty">加载中…</div>';
+  try {
+    // 加 cache buster
+    const r = await fetch(INDEX_URL+'?t='+Date.now());
+    if (!r.ok) throw new Error('index.json 不存在（首次运行还没生成）');
+    const list = await r.json();
+    if (!list.length) { area.innerHTML = '<div class="empty">还没有数据，先触发一次更新吧</div>'; return; }
+    let html = '<table><thead><tr><th>月份</th><th>文件</th><th>大小</th><th>更新时间</th><th>操作</th></tr></thead><tbody>';
+    for (const it of list) {
+      const fileUrl = encodeURIComponent(DATA_DIR + it.file);
+      const dl = DATA_DIR + encodeURIComponent(it.file);
+      const treemapUrl = `${TREEMAP_PAGE}?excel=${fileUrl}`;
+      const mt = new Date(it.mtime*1000).toLocaleString('zh-CN');
+      const kb = (it.size/1024).toFixed(1)+' KB';
+      html += `<tr>
+        <td><b>${it.month||'-'}</b></td>
+        <td style="font-size:12px;color:#999;">${it.file}</td>
+        <td>${kb}</td>
+        <td style="font-size:12px;color:#888;">${mt}</td>
+        <td>
+          <a href="${treemapUrl}" target="_blank">🎨 画图</a>
+          &nbsp;·&nbsp;
+          <a href="${dl}" download>⬇ Excel</a>
+        </td>
+      </tr>`;
+    }
+    html += '</tbody></table>';
+    area.innerHTML = html;
+  } catch (e) {
+    area.innerHTML = `<div class="empty">⚠️ ${e.message}</div>`;
+  }
+}
+
+$('btn-refresh').addEventListener('click', loadHistory);
+loadHistory();
+</script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+name: 更新月度数据
+
+on:
+  workflow_dispatch:
+    inputs:
+      month:
+        description: '月份 (YYYY-MM)，例如 2026-04'
+        required: true
+        type: string
+      tiktok:
+        description: 'TikTok 修正时长（十亿分钟），例如 175.887'
+        required: true
+        type: string
+      kwai:
+        description: 'Kwai 修正时长（十亿分钟），例如 68.967'
+        required: true
+        type: string
+      country:
+        description: '国家代码（默认 BR）'
+        required: false
+        default: 'BR'
+        type: string
+
+permissions:
+  contents: write   # 需要 push 回 main 分支保存 product_id_cache + 发布 docs/
+
+concurrency:
+  group: update-data
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: 检出仓库
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # 需要完整历史以便 push
+
+      - name: 配置 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: 安装依赖
+        run: pip install -r requirements.txt
+
+      - name: 写入 API Key
+        run: echo "DATAAI_API_KEY=${{ secrets.DATAAI_API_KEY }}" > .env
+
+      - name: 运行 pipeline
+        env:
+          DATAAI_API_KEY: ${{ secrets.DATAAI_API_KEY }}
+        run: |
+          set -e
+          mkdir -p docs/data
+          python3 run.py \
+            --month "${{ inputs.month }}" \
+            --tiktok "${{ inputs.tiktok }}" \
+            --kwai "${{ inputs.kwai }}" \
+            --country "${{ inputs.country }}" \
+            --out "docs/data/巴西数据底稿_${{ inputs.month }}.xlsx" \
+            --no-open \
+            --no-server
+          # 同时把 Excel 复制一份到根目录（保持原 README 习惯）
+          cp "docs/data/巴西数据底稿_${{ inputs.month }}.xlsx" \
+             "巴西数据底稿_${{ inputs.month }}.xlsx" || true
+
+      - name: 更新 docs/data/index.json（文件列表）
+        run: python3 scripts/build_index.py
+
+      - name: 提交结果到 main
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/data/ product_id_cache.json raw_cache_*.json 巴西数据底稿_*.xlsx 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "没有变更"
+          else
+            git commit -m "data: 更新 ${{ inputs.month }} (TT=${{ inputs.tiktok }} Kwai=${{ inputs.kwai }})"
+            git push origin HEAD:main
+          fi
+
+      - name: 上传 Excel 作为 Artifact（保留 90 天，可在 Actions 页面下载）
+        uses: actions/upload-artifact@v4
+        with:
+          name: 巴西数据底稿_${{ inputs.month }}
+          path: docs/data/巴西数据底稿_${{ inputs.month }}.xlsx
+          retention-days: 90

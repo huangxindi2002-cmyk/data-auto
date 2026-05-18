@@ -9,3 +9,8 @@ __pycache__/
 product_id_cache.json
 raw_cache_*.json
 data-auto/
+
+# 例外：docs/data/ 下的 Excel 和缓存要 commit（供 Pages 访问 + 累积 product_id_cache 让 Actions 复用）
+!docs/data/*.xlsx
+!product_id_cache.json
+.last_inputs.json

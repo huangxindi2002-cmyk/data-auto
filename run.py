@@ -27,6 +27,7 @@ def main():
     ap.add_argument('--csv-dir', help='跳过 API，从指定目录读 8 个 CSV')
     ap.add_argument('--out', help='输出 Excel 路径，默认 巴西数据底稿_<month>.xlsx')
     ap.add_argument('--no-open', action='store_true', help='完成后不自动打开画图工具')
+    ap.add_argument('--no-server', action='store_true', help='不启动本地 HTTP 服务器（CI 模式）')
     args = ap.parse_args()
 
     month = args.month
@@ -94,30 +95,34 @@ def main():
             tools_xlsx = os.path.join(tools_dir, xlsx_filename)
             shutil.copy2(out_path, tools_xlsx)
 
-            # 在 tools/ 启动 http server (port 自动选)
-            import http.server, socketserver, threading, socket
-            for port in range(8765, 8800):
+            if args.no_server:
+                # CI 模式：只复制不启服务
+                print(f"📁 Excel 已复制到 {tools_xlsx}（未启动 HTTP server）")
+            else:
+                # 在 tools/ 启动 http server (port 自动选)
+                import http.server, socketserver, threading, socket
+                for port in range(8765, 8800):
+                    try:
+                        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                        sock.bind(('127.0.0.1', port))
+                        sock.close()
+                        break
+                    except OSError:
+                        continue
+                os.chdir(tools_dir)
+                handler = http.server.SimpleHTTPRequestHandler
+                httpd = socketserver.TCPServer(('127.0.0.1', port), handler)
+                t = threading.Thread(target=httpd.serve_forever, daemon=True)
+                t.start()
+                url = f"http://127.0.0.1:{port}/treemap_v2.html?excel={xlsx_filename}"
+                import subprocess
+                subprocess.run(['open', url], check=False)
+                print(f"🎨 已打开画图工具（本地服务: {url}）")
+                print(f"   按 Ctrl+C 停止服务（不停止也可关闭终端）")
                 try:
-                    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                    sock.bind(('127.0.0.1', port))
-                    sock.close()
-                    break
-                except OSError:
-                    continue
-            os.chdir(tools_dir)
-            handler = http.server.SimpleHTTPRequestHandler
-            httpd = socketserver.TCPServer(('127.0.0.1', port), handler)
-            t = threading.Thread(target=httpd.serve_forever, daemon=True)
-            t.start()
-            url = f"http://127.0.0.1:{port}/treemap_v2.html?excel={xlsx_filename}"
-            import subprocess
-            subprocess.run(['open', url], check=False)
-            print(f"🎨 已打开画图工具（本地服务: {url}）")
-            print(f"   按 Ctrl+C 停止服务（不停止也可关闭终端）")
-            try:
-                t.join()
-            except KeyboardInterrupt:
-                print(f"\n服务停止")
+                    t.join()
+                except KeyboardInterrupt:
+                    print(f"\n服务停止")
         else:
             print(f"⚠️  未找到 {html_path}")
 
