@@ -431,12 +431,12 @@
       "ext_time": null
     },
     "ReelShort": {
-      "cat": "长视频",
+      "cat": "短剧",
       "tag": 0,
       "ext_time": null
     },
     "DramaBox - movies and drama": {
-      "cat": "长视频",
+      "cat": "短剧",
       "tag": 0,
       "ext_time": null
     },
@@ -732,6 +732,306 @@
     },
     "OLX Brasil": {
       "cat": "Shopping",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Melolo - Short Movie & TV": {
+      "cat": "短剧",
+      "tag": 0,
+      "ext_time": null
+    },
+    "DramaReels - Pure Short Dramas": {
+      "cat": "短剧",
+      "tag": 0,
+      "ext_time": null
+    },
+    "GoodShort": {
+      "cat": "短剧",
+      "tag": 0,
+      "ext_time": null
+    },
+    "ShortTV": {
+      "cat": "短剧",
+      "tag": 0,
+      "ext_time": null
+    },
+    "eStory- short dramas & Novel": {
+      "cat": "短剧",
+      "tag": 0,
+      "ext_time": null
+    },
+    "FoamDrama - A short drama app": {
+      "cat": "短剧",
+      "tag": 0,
+      "ext_time": null
+    },
+    "NovelaShort: Short Dramas": {
+      "cat": "短剧",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Free Reels: Watch & Enjoy": {
+      "cat": "短剧",
+      "tag": 0,
+      "ext_time": null
+    },
+    "DramaPick - Watch Short Dramas": {
+      "cat": "短剧",
+      "tag": 0,
+      "ext_time": null
+    },
+    "ChatGPT": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Character AI": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "DeepSeek": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Grok - AI Assistant": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Microsoft Copilot": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Perplexity": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Luzia: Your AI Assistant": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Poly.AI - Create AI Chat Bot": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Emochi: Unlimited Chat with AI": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Cici": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Dootchi: Chat with AI Chars": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "HiWaifu: AI Friend & Waifu Hub": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Claude by Anthropic": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Talkie: Soulful AI, AI Friend": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Linky:Chat with Influencers AI": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Cycle AI: Chat & AI Friends": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Suno: AI Songs & Music Maker": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Manus AI": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "AI Gallery": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Toki - The AI Calendar": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Google Gemini": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Mureka - AI Song&Music Maker": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "PixVerse: AI Video Generator": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "AI Catch: AI Video Generator": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Comet: AI Browser & Assistant": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "AI Song & Music Maker - Donna": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "AI Mirror": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "buddy.ai": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Learna AI: English Learning": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Nova - AI Chatbot": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Agnes AI": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "SpicyChat AI: Roleplay Chat": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "GoPhoto:AI Photo & Video Maker": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Vibes - AI Video Creation": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "AI Photo Generator -Collart AI": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Accio - AI Sourcing Engine": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Google Assistant Go": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "VIVAGO -AI Video Editor": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "ElevenLabs: AI Voice Generator": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Google Assistant": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "AI Enhancer AI Photo Enhancer": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "KapKap - AI Talking Videos": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Hailuo AI: Official by MiniMax": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "ElevenLabs Reader: AI Audio": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Seekee AI Browser & Search": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Geni Art – AI Photo Generator": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Pico AI - Language Learning": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Genspark: AI Search & Browser": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Decor AI: Room & Home Design": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "AI Photo Editor - AIFoto": {
+      "cat": "AI",
+      "tag": 0,
+      "ext_time": null
+    },
+    "Deepsearch AI Search Assistant": {
+      "cat": "AI",
       "tag": 0,
       "ext_time": null
     }
