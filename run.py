@@ -63,7 +63,7 @@ def main():
     print(f"\n⚙️  运行 pipeline...")
     tiktok_min = args.tiktok * 1e9 if args.tiktok else None
     kwai_min = args.kwai * 1e9 if args.kwai else None
-    result = pipeline.run(csv_data, tiktok_min=tiktok_min, kwai_min=kwai_min)
+    result = pipeline.run(csv_data, tiktok_min=tiktok_min, kwai_min=kwai_min, month=month)
 
     print(f"\n📊 各类合计:")
     for cat in result['categories']:

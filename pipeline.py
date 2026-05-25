@@ -40,8 +40,8 @@ ENG_TO_CN = {
     'Shopping': '电商',
 }
 # 注意：'Photo & Video' 不在此映射 —— 该 CSV 里的 APP 仅在被人工指派为
-# 「泛短视频/长视频/直播」时才进入对应垂类，否则不参与累加
-# 「直播/长视频/社区/浏览器/搜索/生活服务」完全靠人工分类
+# 「泛短视频/中长视频/直播」时才进入对应垂类，否则不参与累加
+# 「直播/中长视频/社区/浏览器/搜索/生活服务」完全靠人工分类
 
 CATEGORIES_ZH = config.CATEGORIES_ZH
 
@@ -55,13 +55,15 @@ def load_manual_rules(path=None):
         return json.load(f)
 
 
-def run(csv_data, tiktok_min=None, kwai_min=None, manual_rules_path=None):
+def run(csv_data, tiktok_min=None, kwai_min=None, manual_rules_path=None, month=None):
     """
     csv_data: dict[str, list[{name, time}]]
         Required keys: 'Overall', 'Social', 'Photo & Video', 'Music',
         'News & Magazines', 'Books & Reference', 'Games', 'Shopping'
         time 单位: 分钟（与 data.ai 网页 CSV 直接读出一致）
-    tiktok_min/kwai_min: 分钟数, override TT/Kwai 统一时长（不传则用 manual_rules.tt_kwai 默认值）
+    tiktok_min/kwai_min: 分钟数, override TT/Kwai 统一时长（最高优先级）
+    month: 'YYYY-MM'，若提供则尝试从 manual.tt_kwai_monthly[month] 取月度值
+    优先级: CLI(tiktok_min/kwai_min) > tt_kwai_monthly[month] > tt_kwai
     """
     manual = load_manual_rules(manual_rules_path)
     rules_raw = manual.get('rules', {})  # name → {cat, tag, ext_time}
@@ -70,6 +72,14 @@ def run(csv_data, tiktok_min=None, kwai_min=None, manual_rules_path=None):
     def lookup_rule(name):
         return rules.get(name.lower())
     tt_kwai = dict(manual.get('tt_kwai', {}))
+    # 月度覆盖
+    if month and month in manual.get('tt_kwai_monthly', {}):
+        m_override = manual['tt_kwai_monthly'][month]
+        if 'TikTok' in m_override:
+            tt_kwai['TikTok'] = float(m_override['TikTok'])
+        if 'Kwai' in m_override:
+            tt_kwai['Kwai'] = float(m_override['Kwai'])
+    # CLI 最高优先级
     if tiktok_min is not None:
         tt_kwai['TikTok'] = float(tiktok_min)
     if kwai_min is not None:
@@ -155,6 +165,50 @@ def run(csv_data, tiktok_min=None, kwai_min=None, manual_rules_path=None):
                 # 兜底：用分类 CSV 里最大值
                 name_unified[name] = max(cat_app_time[name].values())
 
+    # ---- Step 4b: APP 拆分（如 Instagram → Reels + 社交）----
+    # app_splits 配置: {original_name: {default_ratio, split_names, monthly_override}}
+    # 优先级：monthly_override[month].reels_time(绝对分钟) > monthly_override[month].ratio > default_ratio
+    app_splits = manual.get('app_splits', {})
+    split_records = []  # [(virtual_name, zh_cat, time)]
+    for orig_name, split_cfg in app_splits.items():
+        if orig_name not in name_to_cat2:
+            # 检查大小写
+            matched = None
+            for n in name_to_cat2:
+                if n.lower() == orig_name.lower():
+                    matched = n
+                    break
+            if matched is None:
+                continue
+            orig_name_actual = matched
+        else:
+            orig_name_actual = orig_name
+        total_t = name_unified.get(orig_name_actual, 0)
+        if total_t <= 0:
+            continue
+        split_names = split_cfg.get('split_names', {})
+        m_override = (split_cfg.get('monthly_override') or {}).get(month or '', {}) or {}
+        # 决定 ratio
+        if m_override.get('reels_time') is not None:
+            # 绝对分钟值优先：reels_time 直接当作"第一个 cat"（约定：default_ratio 第一个 key）的部分
+            ratio_keys = list(split_cfg.get('default_ratio', {}).keys())
+            if len(ratio_keys) < 2:
+                continue
+            primary_cat = ratio_keys[0]   # 例如 '泛短视频'
+            secondary_cat = ratio_keys[1] # 例如 '社交'
+            reels_t = float(m_override['reels_time'])
+            other_t = max(total_t - reels_t, 0.0)
+            assigned = {primary_cat: reels_t, secondary_cat: other_t}
+        else:
+            ratio = m_override.get('ratio') or split_cfg.get('default_ratio', {})
+            assigned = {zh_cat: total_t * float(r) for zh_cat, r in ratio.items()}
+        for zh_cat, t in assigned.items():
+            virt_name = split_names.get(zh_cat, f"{orig_name_actual} ({zh_cat})")
+            split_records.append((virt_name, zh_cat, t))
+        # 从 name_to_cat2 / name_unified 移除原条目
+        name_to_cat2.pop(orig_name_actual, None)
+        name_unified.pop(orig_name_actual, None)
+
     # ---- Step 5: 累加 cat_total + 收集每类 APP ----
     cat_apps = {c: [] for c in CATEGORIES_ZH}
     cat_total = {c: 0.0 for c in CATEGORIES_ZH}
@@ -162,11 +216,19 @@ def run(csv_data, tiktok_min=None, kwai_min=None, manual_rules_path=None):
     for name, cat2 in name_to_cat2.items():
         # 英文 → 中文
         zh_cat = ENG_TO_CN.get(cat2, cat2)
+        if zh_cat == '排除':
+            continue
         if zh_cat in cat_apps:
             t = name_unified.get(name, 0)
             if t > 0:
                 cat_apps[zh_cat].append({'name': name, 'time': t})
                 cat_total[zh_cat] += t
+
+    # 注入拆分记录
+    for virt_name, zh_cat, t in split_records:
+        if zh_cat in cat_apps and t > 0:
+            cat_apps[zh_cat].append({'name': virt_name, 'time': t})
+            cat_total[zh_cat] += t
 
     # ---- Step 5b: APP 合并（如 WhatsApp Messenger + WhatsApp Business）----
     MERGE_GROUPS = getattr(config, 'APP_MERGE_GROUPS', {})
@@ -201,9 +263,17 @@ def run(csv_data, tiktok_min=None, kwai_min=None, manual_rules_path=None):
         }
 
     # ---- Step 7: unknown ----
+    # 已知排除：被 splits 处理的原 APP + cat="排除" 的 APP
+    split_orig_lower = {n.lower() for n in app_splits.keys()}
+    excluded_lower = {k for k, r in rules.items() if r.get('cat') == '排除'}
+    skip_lower = split_orig_lower | excluded_lower
     unknown = []
     for name, t in overall.items():
-        if name not in name_to_cat2 and t / 1e9 > 0.5:
+        if name in name_to_cat2:
+            continue
+        if name.lower() in skip_lower:
+            continue
+        if t / 1e9 > 0.5:
             unknown.append({'name': name, 'time': t / 1e9})
     unknown.sort(key=lambda x: -x['time'])
 

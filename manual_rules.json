@@ -1,1043 +1,1416 @@
 {
-  "rules": {
-    "safari": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Google": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Chrome Browser": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Samsung Internet Browser": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Brave Browser: Fast AdBlocker": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Opera Browser": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Firefox Browser": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Microsoft Edge": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Adblock Browser: Fast & Secure": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "FAB Adblocker Browser: Adblock": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "UC Browser": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Kiwi Browser": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Vivaldi Browser": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Pure Web Browser-Ad Blocker": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Tor Browser": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Ecosia Browser": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Whats Web": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Web Browser & Fast Explorer": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Phoenix Browser": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Whats Web - Whatscan for Web": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Whats Web by 颖妮 王": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "POP Browser Lite": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Clone WA Web Scanner - Dual WA": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Dual WA: Web Messenger Duo": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "WhatWeb Cloner": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Whats Web by Firehawk": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "XBrowser": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Messenger for WhatsApp Web +": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Whats Web Scanner - Dual WA": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Whatscan Web - Clone App": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "WA Web": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Whats Web by CodeKraftApps": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Dolphin Browser": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Max Browser-Private & Security": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Incognito Browser - Go Private": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Whats Web: Whatscan Web 2021": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "InBrowser Beta": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Dual Chat - Web Scan": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Wh-Ap Web - 2nd Msgr": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "CryptoTab Browser": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "InBrowser": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Microsoft Edge Canary": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Microsoft Edge Beta": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Whatsclone - Whatscan web": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Avast Secure Browser": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Dual Messaging for Web App": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Clone WA - 2Space WA Web Scan": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Brave Browser (Beta)": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Opera Crypto Browser": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "UC Browser Turbo": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Armorfly Browser & Downloader - Private , Safe": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Internet Browser": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Web Explorer: Private Browser": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Whatscan for Web : Whatsweb QR": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Brave Browser (Nightly)": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Pawxy - Fast VPN & Web Browser": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Web Browser - Fast & Privacy": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Web Browser & Explorer": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Carbon: Super Fast Browser": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Web Scan - Dual Chat": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "KUTO Mini Browser-Tiny, Fast, ": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Whats Web Scanner - Clone App": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Web Browser - Secure Explorer": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Hola Browser-Private&Fast web": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Microsoft Edge Dev": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "AVG Secure Browser": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "WA Web - Dual Chat": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Pi Browser": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "WhatsWeb & Whatscan Web": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Super Browser: Fast & Private": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Whats Web Scan": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "OceanHero - Search the web and": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Private Browser": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "GB WA Latest For WhatsApp Web": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "ConferênciaWeb": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Seekee - Safe&Fast Browser": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Mi Browser": {
-      "cat": "浏览器/搜索",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Youtube": {
-      "cat": "长视频",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Netflix": {
-      "cat": "长视频",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Globo Play": {
-      "cat": "长视频",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Amazon Prime Video": {
-      "cat": "长视频",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Max: Stream HBO, TV, & Movies": {
-      "cat": "长视频",
-      "tag": 0,
-      "ext_time": null
-    },
-    "disney+": {
-      "cat": "长视频",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Pure Tuber": {
-      "cat": "长视频",
-      "tag": 0,
-      "ext_time": null
-    },
-    "MX Player": {
-      "cat": "长视频",
-      "tag": 0,
-      "ext_time": null
-    },
-    "VLC Media Player": {
-      "cat": "长视频",
-      "tag": 0,
-      "ext_time": null
-    },
-    "ReelShort": {
-      "cat": "短剧",
-      "tag": 0,
-      "ext_time": null
-    },
-    "DramaBox - movies and drama": {
-      "cat": "短剧",
-      "tag": 0,
-      "ext_time": null
-    },
-    "twitch": {
-      "cat": "直播",
-      "tag": 0,
-      "ext_time": null
-    },
-    "bigo live": {
-      "cat": "直播",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Pluto.tv": {
-      "cat": "直播",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Hago": {
-      "cat": "直播",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Instagram": {
-      "cat": "泛短视频",
-      "tag": 0,
-      "ext_time": null
-    },
-    "TikTok": {
-      "cat": "泛短视频",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Kwai": {
-      "cat": "泛短视频",
-      "tag": 0,
-      "ext_time": null
-    },
-    "CAPCUT": {
-      "cat": "泛短视频",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Likee": {
-      "cat": "泛短视频",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Uber": {
-      "cat": "生活服务",
-      "tag": 0,
-      "ext_time": null
-    },
-    "iFood Delivery de Comida": {
-      "cat": "生活服务",
-      "tag": 0,
-      "ext_time": null
-    },
-    "99Taxis": {
-      "cat": "生活服务",
-      "tag": 0,
-      "ext_time": null
-    },
-    "inDrive": {
-      "cat": "生活服务",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Booking.com": {
-      "cat": "生活服务",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Airbnb": {
-      "cat": "生活服务",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Lalamove Driver": {
-      "cat": "生活服务",
-      "tag": 0,
-      "ext_time": null
-    },
-    "waze": {
-      "cat": "社区",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Pinterest": {
-      "cat": "社区",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Reddit": {
-      "cat": "社区",
-      "tag": 0,
-      "ext_time": null
-    },
-    "quora": {
-      "cat": "社区",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Helo - Share Your Life": {
-      "cat": "社区",
-      "tag": 0,
-      "ext_time": null
-    },
-    "WhatsApp Messenger": {
-      "cat": "Social",
-      "tag": 0,
-      "ext_time": null
-    },
-    "WhatsApp Business": {
-      "cat": "Social",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Facebook": {
-      "cat": "Social",
-      "tag": 0,
-      "ext_time": null
-    },
-    "X": {
-      "cat": "Social",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Telegram": {
-      "cat": "Social",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Facebook Messenger": {
-      "cat": "Social",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Tinder": {
-      "cat": "Social",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Google News": {
-      "cat": "News & Magazines",
-      "tag": 0,
-      "ext_time": null
-    },
-    "G1": {
-      "cat": "News & Magazines",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Opera News": {
-      "cat": "News & Magazines",
-      "tag": 0,
-      "ext_time": null
-    },
-    "UOL | Notícias em Tempo Real": {
-      "cat": "News & Magazines",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Flipboard": {
-      "cat": "News & Magazines",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Zero Hora": {
-      "cat": "News & Magazines",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Wattpad": {
-      "cat": "Books & Reference",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Kindle": {
-      "cat": "Books & Reference",
-      "tag": 0,
-      "ext_time": null
-    },
-    "JW Library": {
-      "cat": "Books & Reference",
-      "tag": 0,
-      "ext_time": null
-    },
-    "GALATEA": {
-      "cat": "Books & Reference",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Bible": {
-      "cat": "Books & Reference",
-      "tag": 0,
-      "ext_time": null
-    },
-    "NovelToon": {
-      "cat": "Books & Reference",
-      "tag": 0,
-      "ext_time": null
-    },
-    "spotify": {
-      "cat": "Music",
-      "tag": 0,
-      "ext_time": null
-    },
-    "YouTube Music": {
-      "cat": "Music",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Lark Player": {
-      "cat": "Music",
-      "tag": 0,
-      "ext_time": null
-    },
-    "eSound": {
-      "cat": "Music",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Deezer": {
-      "cat": "Music",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Apple Music": {
-      "cat": "Music",
-      "tag": 0,
-      "ext_time": null
-    },
-    "ROBLOX": {
-      "cat": "Games",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Free Fire": {
-      "cat": "Games",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Royal Match": {
-      "cat": "Games",
-      "tag": 0,
-      "ext_time": null
-    },
-    "EA SPORTS FC™ MOBILE 24 SOCCER": {
-      "cat": "Games",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Clash Royale": {
-      "cat": "Games",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Minecraft Pocket Edition": {
-      "cat": "Games",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Shopee": {
-      "cat": "Shopping",
-      "tag": 0,
-      "ext_time": null
-    },
-    "MercadoLibre": {
-      "cat": "Shopping",
-      "tag": 0,
-      "ext_time": null
-    },
-    "SHEIN": {
-      "cat": "Shopping",
-      "tag": 0,
-      "ext_time": null
-    },
-    "AliExpress": {
-      "cat": "Shopping",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Inlog Navegador Coleta": {
-      "cat": "Shopping",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Amazon": {
-      "cat": "Shopping",
-      "tag": 0,
-      "ext_time": null
-    },
-    "OLX Brasil": {
-      "cat": "Shopping",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Melolo - Short Movie & TV": {
-      "cat": "短剧",
-      "tag": 0,
-      "ext_time": null
-    },
-    "DramaReels - Pure Short Dramas": {
-      "cat": "短剧",
-      "tag": 0,
-      "ext_time": null
-    },
-    "GoodShort": {
-      "cat": "短剧",
-      "tag": 0,
-      "ext_time": null
-    },
-    "ShortTV": {
-      "cat": "短剧",
-      "tag": 0,
-      "ext_time": null
-    },
-    "eStory- short dramas & Novel": {
-      "cat": "短剧",
-      "tag": 0,
-      "ext_time": null
-    },
-    "FoamDrama - A short drama app": {
-      "cat": "短剧",
-      "tag": 0,
-      "ext_time": null
-    },
-    "NovelaShort: Short Dramas": {
-      "cat": "短剧",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Free Reels: Watch & Enjoy": {
-      "cat": "短剧",
-      "tag": 0,
-      "ext_time": null
-    },
-    "DramaPick - Watch Short Dramas": {
-      "cat": "短剧",
-      "tag": 0,
-      "ext_time": null
-    },
-    "ChatGPT": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Character AI": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "DeepSeek": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Grok - AI Assistant": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Microsoft Copilot": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Perplexity": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Luzia: Your AI Assistant": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Poly.AI - Create AI Chat Bot": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Emochi: Unlimited Chat with AI": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Cici": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Dootchi: Chat with AI Chars": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "HiWaifu: AI Friend & Waifu Hub": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Claude by Anthropic": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Talkie: Soulful AI, AI Friend": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Linky:Chat with Influencers AI": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Cycle AI: Chat & AI Friends": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Suno: AI Songs & Music Maker": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Manus AI": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "AI Gallery": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Toki - The AI Calendar": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Google Gemini": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Mureka - AI Song&Music Maker": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "PixVerse: AI Video Generator": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "AI Catch: AI Video Generator": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Comet: AI Browser & Assistant": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "AI Song & Music Maker - Donna": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "AI Mirror": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "buddy.ai": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Learna AI: English Learning": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Nova - AI Chatbot": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Agnes AI": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "SpicyChat AI: Roleplay Chat": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "GoPhoto:AI Photo & Video Maker": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Vibes - AI Video Creation": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "AI Photo Generator -Collart AI": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Accio - AI Sourcing Engine": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Google Assistant Go": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "VIVAGO -AI Video Editor": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "ElevenLabs: AI Voice Generator": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Google Assistant": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "AI Enhancer AI Photo Enhancer": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "KapKap - AI Talking Videos": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Hailuo AI: Official by MiniMax": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "ElevenLabs Reader: AI Audio": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Seekee AI Browser & Search": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Geni Art – AI Photo Generator": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Pico AI - Language Learning": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Genspark: AI Search & Browser": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Decor AI: Room & Home Design": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "AI Photo Editor - AIFoto": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    },
-    "Deepsearch AI Search Assistant": {
-      "cat": "AI",
-      "tag": 0,
-      "ext_time": null
-    }
+ "rules": {
+  "safari": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
   },
-  "tt_kwai": {
-    "Kwai": 68967176867,
-    "TikTok": 175887180000
+  "Google": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Chrome Browser": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Samsung Internet Browser": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Brave Browser: Fast AdBlocker": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Opera Browser": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Firefox Browser": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Microsoft Edge": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Adblock Browser: Fast & Secure": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "FAB Adblocker Browser: Adblock": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "UC Browser": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Kiwi Browser": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Vivaldi Browser": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Pure Web Browser-Ad Blocker": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Tor Browser": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Ecosia Browser": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Whats Web": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Web Browser & Fast Explorer": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Phoenix Browser": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Whats Web - Whatscan for Web": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Whats Web by 颖妮 王": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "POP Browser Lite": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Clone WA Web Scanner - Dual WA": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Dual WA: Web Messenger Duo": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "WhatWeb Cloner": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Whats Web by Firehawk": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "XBrowser": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Messenger for WhatsApp Web +": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Whats Web Scanner - Dual WA": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Whatscan Web - Clone App": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "WA Web": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Whats Web by CodeKraftApps": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Dolphin Browser": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Max Browser-Private & Security": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Incognito Browser - Go Private": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Whats Web: Whatscan Web 2021": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "InBrowser Beta": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Dual Chat - Web Scan": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Wh-Ap Web - 2nd Msgr": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "CryptoTab Browser": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "InBrowser": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Microsoft Edge Canary": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Microsoft Edge Beta": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Whatsclone - Whatscan web": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Avast Secure Browser": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Dual Messaging for Web App": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Clone WA - 2Space WA Web Scan": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Brave Browser (Beta)": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Opera Crypto Browser": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "UC Browser Turbo": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Armorfly Browser & Downloader - Private , Safe": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Internet Browser": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Web Explorer: Private Browser": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Whatscan for Web : Whatsweb QR": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Brave Browser (Nightly)": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Pawxy - Fast VPN & Web Browser": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Web Browser - Fast & Privacy": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Web Browser & Explorer": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Carbon: Super Fast Browser": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Web Scan - Dual Chat": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "KUTO Mini Browser-Tiny, Fast, ": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Whats Web Scanner - Clone App": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Web Browser - Secure Explorer": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Hola Browser-Private&Fast web": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Microsoft Edge Dev": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "AVG Secure Browser": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "WA Web - Dual Chat": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Pi Browser": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "WhatsWeb & Whatscan Web": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Super Browser: Fast & Private": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Whats Web Scan": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "OceanHero - Search the web and": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Private Browser": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "GB WA Latest For WhatsApp Web": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "ConferênciaWeb": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Seekee - Safe&Fast Browser": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Mi Browser": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Youtube": {
+   "cat": "中长视频",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Netflix": {
+   "cat": "中长视频",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Globo Play": {
+   "cat": "中长视频",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Amazon Prime Video": {
+   "cat": "中长视频",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Max: Stream HBO, TV, & Movies": {
+   "cat": "中长视频",
+   "tag": 0,
+   "ext_time": null
+  },
+  "disney+": {
+   "cat": "中长视频",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Pure Tuber": {
+   "cat": "中长视频",
+   "tag": 0,
+   "ext_time": null
+  },
+  "MX Player": {
+   "cat": "中长视频",
+   "tag": 0,
+   "ext_time": null
+  },
+  "VLC Media Player": {
+   "cat": "中长视频",
+   "tag": 0,
+   "ext_time": null
+  },
+  "ReelShort": {
+   "cat": "短剧",
+   "tag": 0,
+   "ext_time": null
+  },
+  "DramaBox - movies and drama": {
+   "cat": "短剧",
+   "tag": 0,
+   "ext_time": null
+  },
+  "twitch": {
+   "cat": "直播",
+   "tag": 0,
+   "ext_time": null
+  },
+  "bigo live": {
+   "cat": "直播",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Pluto.tv": {
+   "cat": "直播",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Hago": {
+   "cat": "直播",
+   "tag": 0,
+   "ext_time": null
+  },
+  "TikTok": {
+   "cat": "泛短视频",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Kwai": {
+   "cat": "泛短视频",
+   "tag": 0,
+   "ext_time": null
+  },
+  "CAPCUT": {
+   "cat": "泛短视频",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Likee": {
+   "cat": "泛短视频",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Uber": {
+   "cat": "生活服务",
+   "tag": 0,
+   "ext_time": null
+  },
+  "iFood Delivery de Comida": {
+   "cat": "生活服务",
+   "tag": 0,
+   "ext_time": null
+  },
+  "99Taxis": {
+   "cat": "生活服务",
+   "tag": 0,
+   "ext_time": null
+  },
+  "inDrive": {
+   "cat": "生活服务",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Booking.com": {
+   "cat": "生活服务",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Airbnb": {
+   "cat": "生活服务",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Lalamove Driver": {
+   "cat": "生活服务",
+   "tag": 0,
+   "ext_time": null
+  },
+  "waze": {
+   "cat": "生活服务",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Pinterest": {
+   "cat": "社区",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Reddit": {
+   "cat": "社区",
+   "tag": 0,
+   "ext_time": null
+  },
+  "quora": {
+   "cat": "社区",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Helo - Share Your Life": {
+   "cat": "社区",
+   "tag": 0,
+   "ext_time": null
+  },
+  "WhatsApp Messenger": {
+   "cat": "社交",
+   "tag": 0,
+   "ext_time": null
+  },
+  "WhatsApp Business": {
+   "cat": "社交",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Facebook": {
+   "cat": "社区",
+   "tag": 0,
+   "ext_time": null
+  },
+  "X": {
+   "cat": "社区",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Telegram": {
+   "cat": "社交",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Facebook Messenger": {
+   "cat": "社交",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Tinder": {
+   "cat": "社交",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Google News": {
+   "cat": "News & Magazines",
+   "tag": 0,
+   "ext_time": null
+  },
+  "G1": {
+   "cat": "News & Magazines",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Opera News": {
+   "cat": "News & Magazines",
+   "tag": 0,
+   "ext_time": null
+  },
+  "UOL | Notícias em Tempo Real": {
+   "cat": "News & Magazines",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Flipboard": {
+   "cat": "News & Magazines",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Zero Hora": {
+   "cat": "News & Magazines",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Wattpad": {
+   "cat": "Books & Reference",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Kindle": {
+   "cat": "Books & Reference",
+   "tag": 0,
+   "ext_time": null
+  },
+  "JW Library": {
+   "cat": "Books & Reference",
+   "tag": 0,
+   "ext_time": null
+  },
+  "GALATEA": {
+   "cat": "Books & Reference",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Bible": {
+   "cat": "Books & Reference",
+   "tag": 0,
+   "ext_time": null
+  },
+  "NovelToon": {
+   "cat": "Books & Reference",
+   "tag": 0,
+   "ext_time": null
+  },
+  "spotify": {
+   "cat": "Music",
+   "tag": 0,
+   "ext_time": null
+  },
+  "YouTube Music": {
+   "cat": "Music",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Lark Player": {
+   "cat": "Music",
+   "tag": 0,
+   "ext_time": null
+  },
+  "eSound": {
+   "cat": "Music",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Deezer": {
+   "cat": "Music",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Apple Music": {
+   "cat": "Music",
+   "tag": 0,
+   "ext_time": null
+  },
+  "ROBLOX": {
+   "cat": "Games",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Free Fire": {
+   "cat": "Games",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Royal Match": {
+   "cat": "Games",
+   "tag": 0,
+   "ext_time": null
+  },
+  "EA SPORTS FC™ MOBILE 24 SOCCER": {
+   "cat": "Games",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Clash Royale": {
+   "cat": "Games",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Minecraft Pocket Edition": {
+   "cat": "Games",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Shopee": {
+   "cat": "Shopping",
+   "tag": 0,
+   "ext_time": null
+  },
+  "MercadoLibre": {
+   "cat": "Shopping",
+   "tag": 0,
+   "ext_time": null
+  },
+  "SHEIN": {
+   "cat": "Shopping",
+   "tag": 0,
+   "ext_time": null
+  },
+  "AliExpress": {
+   "cat": "Shopping",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Inlog Navegador Coleta": {
+   "cat": "Shopping",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Amazon": {
+   "cat": "Shopping",
+   "tag": 0,
+   "ext_time": null
+  },
+  "OLX Brasil": {
+   "cat": "Shopping",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Melolo - Short Movie & TV": {
+   "cat": "短剧",
+   "tag": 0,
+   "ext_time": null
+  },
+  "DramaReels - Pure Short Dramas": {
+   "cat": "短剧",
+   "tag": 0,
+   "ext_time": null
+  },
+  "GoodShort": {
+   "cat": "短剧",
+   "tag": 0,
+   "ext_time": null
+  },
+  "ShortTV": {
+   "cat": "短剧",
+   "tag": 0,
+   "ext_time": null
+  },
+  "eStory- short dramas & Novel": {
+   "cat": "短剧",
+   "tag": 0,
+   "ext_time": null
+  },
+  "FoamDrama - A short drama app": {
+   "cat": "短剧",
+   "tag": 0,
+   "ext_time": null
+  },
+  "NovelaShort: Short Dramas": {
+   "cat": "短剧",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Free Reels: Watch & Enjoy": {
+   "cat": "短剧",
+   "tag": 0,
+   "ext_time": null
+  },
+  "DramaPick - Watch Short Dramas": {
+   "cat": "短剧",
+   "tag": 0,
+   "ext_time": null
+  },
+  "ChatGPT": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Character AI": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Saylo": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "DeepSeek": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Grok - AI Assistant": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Microsoft Copilot": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Perplexity": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Luzia: Your AI Assistant": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Poly.AI - Create AI Chat Bot": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Emochi: Unlimited Chat with AI": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Cici": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Dootchi: Chat with AI Chars": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "HiWaifu: AI Friend & Waifu Hub": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Claude by Anthropic": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Talkie: Soulful AI, AI Friend": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Linky:Chat with Influencers AI": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Cycle AI: Chat & AI Friends": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Suno: AI Songs & Music Maker": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Manus AI": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "AI Gallery": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Toki - The AI Calendar": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Google Gemini": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Mureka - AI Song&Music Maker": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "PixVerse: AI Video Generator": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "AI Catch: AI Video Generator": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Comet: AI Browser & Assistant": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "AI Song & Music Maker - Donna": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "AI Mirror": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "buddy.ai": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Learna AI: English Learning": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Nova - AI Chatbot": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Agnes AI": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "SpicyChat AI: Roleplay Chat": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "GoPhoto:AI Photo & Video Maker": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Vibes - AI Video Creation": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "AI Photo Generator -Collart AI": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Accio - AI Sourcing Engine": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Google Assistant Go": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "VIVAGO -AI Video Editor": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "ElevenLabs: AI Voice Generator": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Google Assistant": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "AI Enhancer AI Photo Enhancer": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "KapKap - AI Talking Videos": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Hailuo AI: Official by MiniMax": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "ElevenLabs Reader: AI Audio": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Seekee AI Browser & Search": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Geni Art – AI Photo Generator": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Pico AI - Language Learning": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Genspark: AI Search & Browser": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Decor AI: Room & Home Design": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "AI Photo Editor - AIFoto": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Deepsearch AI Search Assistant": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Pinedrama": {
+   "cat": "短剧",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Discord": {
+   "cat": "社区",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Threads": {
+   "cat": "社区",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Snapchat": {
+   "cat": "社交",
+   "tag": 0,
+   "ext_time": null
+  },
+  "LinkedIn": {
+   "cat": "社交",
+   "tag": 0,
+   "ext_time": null
+  },
+  "YouTube Kids": {
+   "cat": "中长视频",
+   "tag": 0,
+   "ext_time": null
+  },
+  "OiTube": {
+   "cat": "中长视频",
+   "tag": 0,
+   "ext_time": null
+  },
+  "SnapTube": {
+   "cat": "中长视频",
+   "tag": 0,
+   "ext_time": null
+  },
+  "FuzzTv": {
+   "cat": "中长视频",
+   "tag": 0,
+   "ext_time": null
+  },
+  "GreenTuber block ads on videos": {
+   "cat": "中长视频",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Tomato - A&M": {
+   "cat": "中长视频",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Google Maps": {
+   "cat": "生活服务",
+   "tag": 0,
+   "ext_time": null
+  },
+  "99 POP": {
+   "cat": "生活服务",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Uber Driver": {
+   "cat": "生活服务",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Nubank": {
+   "cat": "生活服务",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Itaú": {
+   "cat": "生活服务",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Mercado Pago": {
+   "cat": "生活服务",
+   "tag": 0,
+   "ext_time": null
+  },
+  "CAIXA": {
+   "cat": "生活服务",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Banco do Brasil": {
+   "cat": "生活服务",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Santander Brasil": {
+   "cat": "生活服务",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Bradesco": {
+   "cat": "生活服务",
+   "tag": 0,
+   "ext_time": null
+  },
+  "PicPay": {
+   "cat": "生活服务",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Samsung TouchWiz Home": {
+   "cat": "排除",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Clock by Google": {
+   "cat": "排除",
+   "tag": 0,
+   "ext_time": null
+  },
+  "POCO Launcher 2.0 - Customize,": {
+   "cat": "排除",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Phone by Google": {
+   "cat": "排除",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Gmail": {
+   "cat": "排除",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Samsung Clock": {
+   "cat": "排除",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Google Drive": {
+   "cat": "排除",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Microsoft Teams": {
+   "cat": "排除",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Calculator by Google": {
+   "cat": "排除",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Files Go by Google": {
+   "cat": "排除",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Google Play services": {
+   "cat": "排除",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Microsoft Outlook": {
+   "cat": "排除",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Duolingo: Learn Languages": {
+   "cat": "排除",
+   "tag": 0,
+   "ext_time": null
+  },
+  "ibisPaint": {
+   "cat": "排除",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Sua Novela - Drama Grátis": {
+   "cat": "短剧",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Crunchyroll": {
+   "cat": "中长视频",
+   "tag": 0,
+   "ext_time": null
+  },
+  "CineVS Oficial Filmes e Séries": {
+   "cat": "中长视频",
+   "tag": 0,
+   "ext_time": null
+  },
+  "CineVS - Filmes e Séries": {
+   "cat": "中长视频",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Banco Inter": {
+   "cat": "生活服务",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Loterias CAIXA": {
+   "cat": "生活服务",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Binance": {
+   "cat": "生活服务",
+   "tag": 0,
+   "ext_time": null
+  },
+  "InfinitePay": {
+   "cat": "生活服务",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Entregador": {
+   "cat": "生活服务",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Chai - Chat With Ai Bots": {
+   "cat": "AI",
+   "tag": 0,
+   "ext_time": null
+  },
+  "FordBrowser": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Google Go": {
+   "cat": "浏览器/搜索",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Canva": {
+   "cat": "排除",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Nova Launcher": {
+   "cat": "排除",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Adobe Reader": {
+   "cat": "排除",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Samsung Calculator": {
+   "cat": "排除",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Google Docs": {
+   "cat": "排除",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Security": {
+   "cat": "排除",
+   "tag": 0,
+   "ext_time": null
+  },
+  "ZOOM Cloud Meetings": {
+   "cat": "排除",
+   "tag": 0,
+   "ext_time": null
+  },
+  "iCSee": {
+   "cat": "排除",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Glance": {
+   "cat": "排除",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Samsung Notes": {
+   "cat": "排除",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Android Auto": {
+   "cat": "排除",
+   "tag": 0,
+   "ext_time": null
+  },
+  "XOS Launcher -Cool Stylish": {
+   "cat": "排除",
+   "tag": 0,
+   "ext_time": null
+  },
+  "File Manager by  Flashlight Clock": {
+   "cat": "排除",
+   "tag": 0,
+   "ext_time": null
   }
+ },
+ "tt_kwai": {
+  "Kwai": 68967176867,
+  "TikTok": 175887180000
+ },
+ "tt_kwai_monthly": {
+  "2025-04": {
+   "TikTok": 151164000000,
+   "Kwai": 70449680359
+  },
+  "2025-05": {
+   "TikTok": 153543000000,
+   "Kwai": 70189048435
+  },
+  "2025-06": {
+   "TikTok": 159109200000,
+   "Kwai": 67482811469
+  },
+  "2025-07": {
+   "TikTok": 175887180000,
+   "Kwai": 68967176867
+  },
+  "2025-08": {
+   "TikTok": 162221760000,
+   "Kwai": 67623247362
+  },
+  "2025-09": {
+   "TikTok": 154855800000,
+   "Kwai": 64642610779
+  },
+  "2025-10": {
+   "TikTok": 164205450000,
+   "Kwai": 67237599329
+  },
+  "2025-11": {
+   "TikTok": 160828200000,
+   "Kwai": 64678707789
+  },
+  "2025-12": {
+   "TikTok": 163676466000,
+   "Kwai": 65546206992
+  },
+  "2026-01": {
+   "TikTok": 197524727400,
+   "Kwai": 68616131292
+  },
+  "2026-02": {
+   "TikTok": 179936820000,
+   "Kwai": 60373568384
+  },
+  "2026-03": {
+   "TikTok": 192846098900,
+   "Kwai": 65056942492
+  },
+  "2026-04": {
+   "TikTok": 183219192000,
+   "Kwai": 62520062402
+  }
+ },
+ "app_splits": {
+  "Instagram": {
+   "_comment": "Instagram 时长拆分: Reels 进泛短视频, 剩余进社交。优先级: monthly_override.reels_time(分钟绝对值) > monthly_override.ratio > default_ratio",
+   "default_ratio": {
+    "泛短视频": 0.35,
+    "社交": 0.65
+   },
+   "split_names": {
+    "泛短视频": "Instagram Reels",
+    "社交": "Instagram"
+   },
+   "monthly_override": {}
+  }
+ }
 }
