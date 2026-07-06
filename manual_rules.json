@@ -1401,10 +1401,10 @@
  },
  "app_splits": {
   "Instagram": {
-   "_comment": "Instagram 时长拆分: Reels 进泛短视频, 剩余进社交。优先级: monthly_override.reels_time(分钟绝对值) > monthly_override.ratio > default_ratio",
+   "_comment": "Instagram 时长拆分: Reels 进泛短视频, 剩余进社交。优先级: monthly_override.reels_time(分钟绝对值) > monthly_override.ratio > default_ratio。default_ratio 来自 2026 专家访谈：reels 54 / total 105",
    "default_ratio": {
-    "泛短视频": 0.35,
-    "社交": 0.65
+    "泛短视频": 0.5142857142857143,
+    "社交": 0.4857142857142857
    },
    "split_names": {
     "泛短视频": "Instagram Reels",
