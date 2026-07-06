@@ -54,16 +54,33 @@ jobs:
       - name: 运行 pipeline
         env:
           DATAAI_API_KEY: ${{ secrets.DATAAI_API_KEY }}
+          MONTH: ${{ inputs.month }}
         run: |
           set -e
           mkdir -p docs/data
-          python3 run_phone.py \
-            --month "${{ inputs.month }}" \
-            --tiktok "${{ inputs.tiktok }}" \
-            --kwai "${{ inputs.kwai }}" \
-            --country "${{ inputs.country }}" \
-            --out "docs/data/巴西数据底稿_${{ inputs.month }}.xlsx" \
-            --use-cache
+          IS_LOCKED=$(python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          month = os.environ["MONTH"]
+          lock_file = Path("docs/data/locked_months.json")
+          locked = json.loads(lock_file.read_text()) if lock_file.exists() else []
+          print("1" if month in locked else "0")
+          PY
+          )
+          if [ "$IS_LOCKED" = "1" ] && [ -f "docs/data/巴西数据底稿_${{ inputs.month }}.xlsx" ]; then
+            echo "${{ inputs.month }} 已锁定，保留已确认的历史 Excel，不重新拉取 data.ai。"
+            touch "docs/data/巴西数据底稿_${{ inputs.month }}.xlsx"
+          else
+            python3 run_phone.py \
+              --month "${{ inputs.month }}" \
+              --tiktok "${{ inputs.tiktok }}" \
+              --kwai "${{ inputs.kwai }}" \
+              --country "${{ inputs.country }}" \
+              --out "docs/data/巴西数据底稿_${{ inputs.month }}.xlsx" \
+              --use-cache
+          fi
           # 同时把 Excel 复制一份到根目录（保持原 README 习惯）
           cp "docs/data/巴西数据底稿_${{ inputs.month }}.xlsx" \
              "巴西数据底稿_${{ inputs.month }}.xlsx" || true
