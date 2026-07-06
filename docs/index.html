@@ -158,6 +158,7 @@ $('btn-run').addEventListener('click', async ()=>{
   const pat = $('i-pat').value.trim();
   if (!month || !tt || !kw || !pat) { setStatus('❌ 请填齐所有字段', 'err'); return; }
   if (!/^\d{4}-\d{2}$/.test(month)) { setStatus('❌ 月份格式错: 应为 YYYY-MM', 'err'); return; }
+  const updateStartedAtSec = Date.now() / 1000;
 
   $('btn-run').disabled = true;
   setStatus('⏳ 触发中…', 'info');
@@ -222,10 +223,10 @@ $('btn-run').addEventListener('click', async ()=>{
       }
       if (st === 'completed') {
         if (conc === 'success') {
-          setStatus(`✅ <b>${month}</b> 更新完成！稍候几秒刷新即可在下方看到。<br/><a href="${runUrl}" target="_blank" style="color:#2BB974;">查看日志 ↗</a>`, 'ok');
+          setStatus(`✅ <b>${month}</b> Actions 已完成，正在等待 Pages 历史列表刷新…<br/><a href="${runUrl}" target="_blank" style="color:#2BB974;">查看日志 ↗</a>`, 'ok');
+          await waitForHistoryRefresh(month, updateStartedAtSec);
+          setStatus(`✅ <b>${month}</b> 已生成并显示在历史数据中。<br/><a href="${runUrl}" target="_blank" style="color:#2BB974;">查看日志 ↗</a>`, 'ok');
           setProgress('', false);
-          await new Promise(r=>setTimeout(r, 8000));
-          await loadHistory();
         } else {
           setStatus(`❌ Run 失败 (${conc})。<br/><a href="${runUrl}" target="_blank" style="color:#f88;">查看日志排查 ↗</a>`, 'err');
           setProgress('', false);
@@ -242,39 +243,58 @@ $('btn-run').addEventListener('click', async ()=>{
 });
 
 /* ── 历史数据列表 ── */
+async function fetchHistoryList() {
+  const r = await fetch(INDEX_URL+'?t='+Date.now(), {cache:'no-store'});
+  if (!r.ok) throw new Error('index.json 不存在（首次运行还没生成）');
+  return await r.json();
+}
+
+function renderHistory(list) {
+  const area = $('history-area');
+  if (!list.length) { area.innerHTML = '<div class="empty">还没有数据，先触发一次更新吧</div>'; return; }
+  let html = '<table><thead><tr><th>月份</th><th>文件</th><th>大小</th><th>更新时间</th><th>操作</th></tr></thead><tbody>';
+  for (const it of list) {
+    const fileUrl = encodeURIComponent(DATA_DIR + it.file);
+    const dl = DATA_DIR + encodeURIComponent(it.file)+'?t='+Date.now();
+    const treemapUrl = `${TREEMAP_PAGE}?excel=${fileUrl}&t=${Date.now()}`;
+    const mt = new Date(it.mtime*1000).toLocaleString('zh-CN');
+    const kb = (it.size/1024).toFixed(1)+' KB';
+    html += `<tr>
+      <td><b>${it.month||'-'}</b></td>
+      <td style="font-size:12px;color:#999;">${it.file}</td>
+      <td>${kb}</td>
+      <td style="font-size:12px;color:#888;">${mt}</td>
+      <td>
+        <a href="${treemapUrl}" target="_blank">🎨 画图</a>
+        &nbsp;·&nbsp;
+        <a href="${dl}" download>⬇ Excel</a>
+      </td>
+    </tr>`;
+  }
+  html += '</tbody></table>';
+  area.innerHTML = html;
+}
+
 async function loadHistory() {
   const area = $('history-area');
   area.innerHTML = '<div class="empty">加载中…</div>';
   try {
-    // 加 cache buster
-    const r = await fetch(INDEX_URL+'?t='+Date.now());
-    if (!r.ok) throw new Error('index.json 不存在（首次运行还没生成）');
-    const list = await r.json();
-    if (!list.length) { area.innerHTML = '<div class="empty">还没有数据，先触发一次更新吧</div>'; return; }
-    let html = '<table><thead><tr><th>月份</th><th>文件</th><th>大小</th><th>更新时间</th><th>操作</th></tr></thead><tbody>';
-    for (const it of list) {
-      const fileUrl = encodeURIComponent(DATA_DIR + it.file);
-      const dl = DATA_DIR + encodeURIComponent(it.file);
-      const treemapUrl = `${TREEMAP_PAGE}?excel=${fileUrl}`;
-      const mt = new Date(it.mtime*1000).toLocaleString('zh-CN');
-      const kb = (it.size/1024).toFixed(1)+' KB';
-      html += `<tr>
-        <td><b>${it.month||'-'}</b></td>
-        <td style="font-size:12px;color:#999;">${it.file}</td>
-        <td>${kb}</td>
-        <td style="font-size:12px;color:#888;">${mt}</td>
-        <td>
-          <a href="${treemapUrl}" target="_blank">🎨 画图</a>
-          &nbsp;·&nbsp;
-          <a href="${dl}" download>⬇ Excel</a>
-        </td>
-      </tr>`;
-    }
-    html += '</tbody></table>';
-    area.innerHTML = html;
+    renderHistory(await fetchHistoryList());
   } catch (e) {
     area.innerHTML = `<div class="empty">⚠️ ${e.message}</div>`;
   }
+}
+
+async function waitForHistoryRefresh(month, startedAtSec) {
+  for (let i=0; i<24; i++) {
+    setProgress(`等待 Pages 刷新历史列表… (${i+1}/24)`);
+    const list = await fetchHistoryList();
+    renderHistory(list);
+    const hit = list.find(x => x.month === month);
+    if (hit && hit.mtime >= startedAtSec - 30) return hit;
+    await new Promise(r=>setTimeout(r, 5000));
+  }
+  throw new Error(`${month} 已在 Actions 完成，但 Pages 历史列表暂未刷新。请再点一次“刷新”或强制刷新页面。`);
 }
 
 $('btn-refresh').addEventListener('click', loadHistory);
