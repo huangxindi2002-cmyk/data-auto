@@ -1339,6 +1339,61 @@
    "cat": "排除",
    "tag": 0,
    "ext_time": null
+  },
+  "NetShort：Popular Dramas & TV": {
+   "cat": "短剧",
+   "tag": 0,
+   "ext_time": null
+  },
+  "FlickReels": {
+   "cat": "短剧",
+   "tag": 0,
+   "ext_time": null
+  },
+  "iDrama: Stream Movies & TV": {
+   "cat": "短剧",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Pop Drama": {
+   "cat": "短剧",
+   "tag": 0,
+   "ext_time": null
+  },
+  "BonusTV": {
+   "cat": "短剧",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Reelife": {
+   "cat": "短剧",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Dot Drama": {
+   "cat": "短剧",
+   "tag": 0,
+   "ext_time": null
+  },
+  "HotMiniDrama": {
+   "cat": "短剧",
+   "tag": 0,
+   "ext_time": null
+  },
+  "Coin Drama": {
+   "cat": "短剧",
+   "tag": 0,
+   "ext_time": null
+  },
+  "DanaShort": {
+   "cat": "短剧",
+   "tag": 0,
+   "ext_time": null
+  },
+  "VibeShort": {
+   "cat": "短剧",
+   "tag": 0,
+   "ext_time": null
   }
  },
  "tt_kwai": {
@@ -1397,6 +1452,14 @@
   "2026-04": {
    "TikTok": 183219192000,
    "Kwai": 62520062402
+  },
+  "2026-05": {
+   "TikTok": 195694000000,
+   "Kwai": 61504000000
+  },
+  "2026-07": {
+   "TikTok": 200656000000,
+   "Kwai": 61246000000
   }
  },
  "app_splits": {
@@ -1410,7 +1473,11 @@
     "泛短视频": "Instagram Reels",
     "社交": "Instagram"
    },
-   "monthly_override": {}
+   "monthly_override": {
+    "2026-07": {
+     "reels_time": 136317000000
+    }
+   }
   }
  }
 }

@@ -93,7 +93,7 @@ const REPO_NAME  = 'yyy';   // 改成自己的仓库名
 scripts/build_index.py         ← 扫 docs/data/ 生成 index.json
 docs/
   index.html                   ← Pages 首页：触发按钮 + 历史列表
-  treemap.html                 ← treemap_v2 的副本，支持 ?excel=URL
+  treemap.html                 ← 在线 treemap，支持 ?excel=URL
   data/
     巴西数据底稿_YYYY-MM.xlsx   ← workflow 自动 commit
     index.json                  ← 文件清单，给前端读
@@ -102,7 +102,7 @@ docs/
 工作流：
 ```
 点按钮 → fetch GitHub API /actions/workflows/update.yml/dispatches
-       → Actions runner 启动 → run.py 全流程 →
+       → Actions runner 启动 → run_phone.py phone-only 全流程 →
        → 生成 docs/data/巴西数据底稿_<月>.xlsx
        → scripts/build_index.py 更新 index.json
        → git push 回 main

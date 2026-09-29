@@ -20,6 +20,7 @@ API_BASE = "https://api.data.ai/v1.3/intelligence/apps/{market}/usage-ranking"
 # 8 个 CSV 数据集。每个对应一个网页下载的 CSV
 # (CSV_eng_name, [(market, device, category), ...])
 # 每个数据集可能跨多个 (market, device, category)，最后合并
+# device='android'/'ios' = phone+tablet（全部月份均使用此口径，保证同比可比）
 DATASETS = [
     ('Overall', [
         ('all-android', 'android', 'OVERALL'),
@@ -171,6 +172,7 @@ def fetch_month(month, country='BR', api_key=None):
         for market, device, category in sources:
             print(f"  fetching {csv_name} ← {market}/{device}/{category[:50]}...")
             items = _fetch_one(market, device, category, country, start_date, end_date, api_key)
+            # platform 用于 details 端点 + name 解析。注意 device='android_phone' 仍归 'android' 平台
             platform = 'ios' if market == 'ios' else 'android'
             for it in items:
                 pid = it.get('product_id')
@@ -241,7 +243,7 @@ def fetch_month(month, country='BR', api_key=None):
                 merged[name]['time'] += t
             else:
                 merged[name] = {'name': name, 'package_id': str(pid), 'time': t}
-        csv_data[csv_name] = list(merged.values())
+        csv_data[csv_name] = sorted(merged.values(), key=lambda x: -x['time'])
         total = sum(a['time'] for a in csv_data[csv_name])
         print(f"  ✓ {csv_name}: {len(csv_data[csv_name])} apps, total {total/1e9:.2f} bn min")
     return csv_data

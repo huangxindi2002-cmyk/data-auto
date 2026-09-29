@@ -1,118 +1,148 @@
 # data-auto
 
-巴西月度数据自动化 → Excel 底稿 + 矩阵树图。
+巴西移动 App 月度时长自动化：使用 data.ai **phone-only / All Phones** 口径生成 Excel 底稿，并通过 GitHub Pages 查看历史数据与 treemap。
 
----
+- GitHub Pages：<https://huangxindi2002-cmyk.github.io/data-auto/>
+- 完整交接与排障说明：[HANDOFF.md](./HANDOFF.md)
+- 首次配置：[SETUP.md](./SETUP.md)
 
-## 🌐 推荐：网页一键启动（GitHub Pages + Actions）
-
-**任何人** 打开网页 → 填月份/TT/Kwai → 点按钮 → 几分钟后拿到 Excel 和图。
-
-👉 **第一次使用前必读：[SETUP.md](./SETUP.md)**（5 分钟配置）
-
-配好后：
-- 浏览器打开 `https://huangxindi2002-cmyk.github.io/data-auto/`
-- 填表 → 触发 → 等 → 自动出图
-- 历史数据可下载、可重新画图
-
----
-
-## 💻 本地一键启动（可选）
+## 当前唯一正式入口
 
 ```bash
-bash ~/data-auto/update.sh
+python3 run_phone.py \
+  --month 2026-07 \
+  --use-cache \
+  --out output/巴西数据底稿_2026-07.xlsx
 ```
 
-交互式询问：
-- 月份（默认上月）
-- TikTok 总时长（覆盖 data.ai 拉的值）
-- Kwai 总时长（覆盖 data.ai 拉的值）
-- 数据来源（API / 本地 CSV / 缓存）
+当前正式口径：
 
-完成后自动打开画图工具（本地 HTTP 服务）。
+- Android：`android_phone`
+- iOS：`iphone`
+- 国家：`BR`
+- 分类与业务修正：`manual_rules.json`
+
+`run.py`、`update.sh`、`csv_loader.py` 和旧 `raw_cache_YYYY-MM.json` 含平板口径已经淘汰，不再使用。
+
+## 本地安装
+
+```bash
+git clone https://github.com/huangxindi2002-cmyk/data-auto.git
+cd data-auto
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -m pip install -r requirements.txt
+cp .env.example .env
+```
+
+在 `.env` 中填写：
+
+```dotenv
+DATAAI_API_KEY=<your-data-ai-api-key>
+```
+
+不要提交 `.env`。
+
+## 每月运行
+
+### 使用已提交缓存
+
+```bash
+python3 run_phone.py \
+  --month YYYY-MM \
+  --use-cache \
+  --out output/巴西数据底稿_YYYY-MM.xlsx
+```
+
+`--use-cache` 只有在 `raw_cache_phone_YYYY-MM.json` 存在时才真正离线；缓存缺失时脚本会调用 API。运行前可检查：
+
+```bash
+test -f raw_cache_phone_YYYY-MM.json
+```
+
+### 从 API 拉取新月份
+
+```bash
+python3 run_phone.py \
+  --month YYYY-MM \
+  --tiktok <TikTok十亿分钟> \
+  --kwai <Kwai十亿分钟> \
+  --out output/巴西数据底稿_YYYY-MM.xlsx
+```
+
+### 2026-07 可复现基准
+
+2026-07 的业务修正已固化在 `manual_rules.json`：
+
+- TikTok：`200.656` 十亿分钟
+- Kwai：`61.246` 十亿分钟
+- Instagram Reels：`136.317` 十亿分钟
+
+因此可直接执行：
+
+```bash
+python3 run_phone.py \
+  --month 2026-07 \
+  --use-cache \
+  --out output/巴西数据底稿_2026-07.xlsx
+```
+
+## 线上流程
+
+```text
+GitHub Pages / GitHub Actions
+  → .github/workflows/update.yml
+  → run_phone.py
+  → fetch.py
+  → pipeline.py
+  → export.py
+  → docs/data/巴西数据底稿_YYYY-MM.xlsx
+  → scripts/build_index.py
+  → GitHub Pages
+```
+
+已确认的历史月份记录在 `docs/data/locked_months.json`，重复触发时不会覆盖已有 Excel。
 
 ## 输出
 
 | 产物 | 路径 |
-|------|------|
-| Excel 底稿 | `巴西数据底稿_YYYY-MM.xlsx`（同目录 + `docs/data/`） |
-| 画图工具（本地） | `tools/treemap_v2.html` |
-| 画图工具（线上） | `docs/treemap.html`（Pages 部署后通过 `?excel=` 自动加载） |
+|---|---|
+| 月度 Excel | `docs/data/巴西数据底稿_YYYY-MM.xlsx` |
+| phone-only 原始缓存 | `raw_cache_phone_YYYY-MM.json` |
+| 历史索引 | `docs/data/index.json` |
+| 在线 treemap | `docs/treemap.html` |
 
-## 高级用法
+本地查看 Pages：
 
-### 单独跑完整流程
 ```bash
-python3 run.py --month 2025-07 --tiktok 175.887 --kwai 68.967
+python3 -m http.server 8000 --directory docs
 ```
 
-### 用缓存出 Excel（不发任何 API 请求）
+然后访问 <http://127.0.0.1:8000/>。
+
+## 核心文件
+
+```text
+.github/workflows/update.yml   GitHub Actions 月度任务
+run_phone.py                   正式 CLI 入口
+fetch_phone.py                 phone-only 数据集定义
+fetch.py                       data.ai API 与名称缓存
+pipeline.py                    分类、修正、拆分、合并、Top 5
+manual_rules.json              业务规则与月度修正
+product_id_cache.json          product ID → App 名缓存
+export.py                      Excel 导出
+docs/index.html                Pages 操作页
+docs/treemap.html              treemap 页面
+docs/data/locked_months.json   已确认历史月份锁定列表
+scripts/build_index.py         Pages 历史文件索引
+```
+
+## 发布前检查
+
 ```bash
-python3 run.py --month 2025-07 --tiktok 175.887 --kwai 68.967 --use-cache
+python3 -m compileall -q .
+python3 run_phone.py --month 2026-07 --use-cache --out /tmp/data-auto-check.xlsx
+python3 scripts/build_index.py
 ```
 
-### 用本地 CSV 出 Excel（API 限流时）
-```bash
-python3 run.py --month 2025-07 --tiktok 175.887 --kwai 68.967 --csv-dir /path/to/csvs
-```
-
-### CI 模式（不开浏览器、不启 HTTP 服务）
-```bash
-python3 run.py --month 2025-07 --tiktok 175.887 --kwai 68.967 \
-  --out docs/data/巴西数据底稿_2025-07.xlsx --no-open --no-server
-```
-
-## 画图（treemap_v2.html）
-
-`tools/treemap_v2.html` 和 `docs/treemap.html` 是同一个自包含 web 应用：
-
-- 精确测字（`getComputedTextLength`）
-- 智能标签：内置 → 缩字 → 浅色 pill 外溢，三级降级
-- Header 双行错位 + 牵引线
-- 大类按 Excel 顺序、按类别色显示
-- 数值 < 2 自动隐藏（避免主图杂乱）
-- 标签可点击/拖拽编辑（字号、隐藏）
-- 副标题从 sheet 名自动读取（"2025_07" → "2025年7月"）
-- 月总时长从 R2 自动求和
-- 导出 SVG / PNG 2×
-- **自动加载**：URL 加 `?excel=xxx.xlsx` 启动时直接加载
-
-## 项目结构
-
-```
-data-auto/
-├── .github/workflows/update.yml   # GitHub Actions：网页触发的执行体
-├── scripts/build_index.py         # 扫描 docs/data/ 生成文件清单
-├── docs/                          # GitHub Pages 静态根目录
-│   ├── index.html                 #   网页 UI（触发表单 + 历史列表）
-│   ├── treemap.html               #   画图工具（自动加载 ?excel=）
-│   └── data/                      #   每月 Excel 沉淀 + index.json
-├── update.sh                      # 本地交互入口
-├── run.py                         # CLI 入口
-├── fetch.py                       # API 拉数（device=android+ios, pid→name 缓存）
-├── csv_loader.py                  # 本地 CSV 读取
-├── pipeline.py                    # 分类 + Top5 + TT/Kwai 覆盖
-├── export.py                      # 输出 .xlsx
-├── config.py                      # API_KEY / 分类列表 / 合并组
-├── manual_rules.json              # APP → 分类规则
-├── tools/treemap_v2.html          # 本地画图工具
-├── product_id_cache.json          # pid → name 缓存（CI 也会 commit）
-├── raw_cache_YYYY-MM.json         # API 原始数据（gitignored）
-└── SETUP.md                       # GitHub Pages + Actions 配置教程
-```
-
-## 数据流
-
-```
-        ┌─ 网页（docs/index.html）
-        │      ↓ workflow_dispatch
-        │  GitHub Actions
-        │      ↓
-data.ai ─┴─→ fetch.py ─→ pipeline.py ─→ export.py ─→ 巴西数据底稿_YYYY-MM.xlsx
-               ↑                                              │
-TikTok手输 ────┴───────── pipeline overrides                  ↓
-Kwai手输   ───────────── pipeline overrides         docs/treemap.html
-                                                   （treemap + ?excel=自动加载）
-```
-
-`--tiktok` / `--kwai` 在 pipeline 里覆盖对应 APP 时长（类合计自动重算）。
+更多 Git 清理、权限移交、缓存管理和故障排查见 `HANDOFF.md`。
